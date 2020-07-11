@@ -1,6 +1,6 @@
 package com.github.sergdelft.j2graph.builder;
 
-import com.github.sergdelft.j2graph.*;
+import com.github.sergdelft.j2graph.graph.*;
 
 import java.util.*;
 import java.util.stream.Collectors;

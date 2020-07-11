@@ -1,6 +1,6 @@
 package com.github.sergdelft.j2graph.builder;
 
-import com.github.sergdelft.j2graph.*;
+import com.github.sergdelft.j2graph.graph.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.github.sergdelft.j2graph;
+package com.github.sergdelft.j2graph.graph;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.github.sergdelft.j2graph;
+package com.github.sergdelft.j2graph.graph;
 
 public class NonTerminalType {
 

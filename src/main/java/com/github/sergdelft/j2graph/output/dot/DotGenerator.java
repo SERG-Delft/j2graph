@@ -1,6 +1,6 @@
 package com.github.sergdelft.j2graph.output.dot;
 
-import com.github.sergdelft.j2graph.*;
+import com.github.sergdelft.j2graph.graph.*;
 
 import java.util.LinkedList;
 import java.util.List;

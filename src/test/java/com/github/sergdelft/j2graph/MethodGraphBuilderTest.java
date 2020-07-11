@@ -2,6 +2,9 @@ package com.github.sergdelft.j2graph;
 
 import com.github.sergdelft.j2graph.builder.MethodGraphBuilder;
 import com.github.sergdelft.j2graph.builder.NonTerminalBuilder;
+import com.github.sergdelft.j2graph.graph.MethodGraph;
+import com.github.sergdelft.j2graph.graph.Symbol;
+import com.github.sergdelft.j2graph.graph.Token;
 import com.github.sergdelft.j2graph.output.dot.DotGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;

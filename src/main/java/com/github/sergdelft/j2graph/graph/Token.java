@@ -1,6 +1,5 @@
-package com.github.sergdelft.j2graph;
+package com.github.sergdelft.j2graph.graph;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
