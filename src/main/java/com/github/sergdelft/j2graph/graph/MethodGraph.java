@@ -7,12 +7,12 @@ import java.util.List;
 public class MethodGraph {
     private final String methodName;
     private final NonTerminal root;
-    private final List<NonTerminal> nonTerminals;
+    private final Collection<NonTerminal> nonTerminals;
     private final LinkedList<Token> tokens;
     private final Collection<Symbol> symbols;
     private final Collection<Vocabulary> vocabulary;
 
-    public MethodGraph(String methodName, NonTerminal root, List<NonTerminal> nonTerminals, LinkedList<Token> tokens, Collection<Symbol> symbols, Collection<Vocabulary> vocabulary) {
+    public MethodGraph(String methodName, NonTerminal root, Collection<NonTerminal> nonTerminals, LinkedList<Token> tokens, Collection<Symbol> symbols, Collection<Vocabulary> vocabulary) {
         this.methodName = methodName;
         this.root = root;
         this.nonTerminals = nonTerminals;
@@ -29,7 +29,7 @@ public class MethodGraph {
         return root;
     }
 
-    public List<NonTerminal> getNonTerminals() {
+    public Collection<NonTerminal> getNonTerminals() {
         return nonTerminals;
     }
 

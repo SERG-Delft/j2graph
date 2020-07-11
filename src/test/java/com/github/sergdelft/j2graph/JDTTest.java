@@ -2,7 +2,8 @@ package com.github.sergdelft.j2graph;
 
 import com.github.sergdelft.j2graph.ast.JDT;
 import com.github.sergdelft.j2graph.graph.MethodGraph;
-import com.github.sergdelft.j2graph.output.dot.DotGenerator;
+import com.github.sergdelft.j2graph.output.dot.DotVisitor;
+import com.github.sergdelft.j2graph.output.dot.OutputGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
@@ -11,20 +12,25 @@ import java.util.List;
 
 public class JDTTest {
 
-    final DotGenerator dotGenerator = new DotGenerator();
+    private final DotVisitor dot = new DotVisitor();
+    private final OutputGenerator out = new OutputGenerator();
 
     @Test
     void t1() {
         String sourceCode = loadFixture("fixture/A.java");
         List<MethodGraph> graphs = new JDT().parse(sourceCode);
-        System.out.println(dotGenerator.generate(graphs.get(0)));
+
+        out.accept(graphs.get(0), dot);
+        System.out.println(dot.asString());
     }
 
     @Test
     void t2() {
         String sourceCode = loadFixture("fixture/B.java");
         List<MethodGraph> graphs = new JDT().parse(sourceCode);
-        System.out.println(dotGenerator.generate(graphs.get(0)));
+
+        out.accept(graphs.get(0), dot);
+        System.out.println(dot.asString());
     }
 
     private String loadFixture(String fixture) {

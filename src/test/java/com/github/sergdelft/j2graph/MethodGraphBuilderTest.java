@@ -5,7 +5,8 @@ import com.github.sergdelft.j2graph.builder.NonTerminalBuilder;
 import com.github.sergdelft.j2graph.graph.MethodGraph;
 import com.github.sergdelft.j2graph.graph.Symbol;
 import com.github.sergdelft.j2graph.graph.Token;
-import com.github.sergdelft.j2graph.output.dot.DotGenerator;
+import com.github.sergdelft.j2graph.output.dot.DotVisitor;
+import com.github.sergdelft.j2graph.output.dot.OutputGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -37,8 +38,9 @@ public class MethodGraphBuilderTest {
 
         MethodGraph graph = builder.build();
 
-        String dot = new DotGenerator().generate(graph);
-        System.out.println(dot);
+        DotVisitor dot = new DotVisitor();
+        new OutputGenerator().accept(graph, dot);
+        System.out.println(dot.asString());
 
     }
 }
