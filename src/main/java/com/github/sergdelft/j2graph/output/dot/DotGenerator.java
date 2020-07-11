@@ -23,6 +23,7 @@ public class DotGenerator {
 
         // edges
         tokenEdges(method);
+        nonTerminalTokenEdges(method);
         nonTerminalEdges(method);
         tokenSymbols(method);
         tokenVocabulary(method);
@@ -99,15 +100,20 @@ public class DotGenerator {
         builder.append("\n");
     }
 
-    private void nonTerminalTokenEdges(NonTerminal node) {
-        List<Token> tokens = node.getTokens();
-        for (Token token : tokens) {
-            builder.append(String.format("\tNT%d -> T%d [color=red, label=\"child\"];\n", node.getId(), token.getId()));
+    private void nonTerminalTokenEdges(MethodGraph method) {
+
+        builder.append("\t// non terminal -> token edges\n");
+        for (NonTerminal node : method.getNonTerminals()) {
+            List<Token> tokens = node.getTokens();
+            for (Token token : tokens) {
+                builder.append(String.format("\tNT%d -> T%d [color=red, label=\"child\"];\n", node.getId(), token.getId()));
+            }
         }
+        builder.append("\n");
     }
 
     private void nonTerminalEdges(NonTerminal parent) {
-        nonTerminalTokenEdges(parent);
+
 
         List<NonTerminal> children = parent.getChildren();
         for (NonTerminal child : children) {

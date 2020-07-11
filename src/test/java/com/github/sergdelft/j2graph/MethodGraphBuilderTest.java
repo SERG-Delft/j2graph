@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class MethodGraphBuilderTest {
 
     @Test
-    void t1() {
+    void typilus_paper_example() {
         MethodGraphBuilder builder = new MethodGraphBuilder("m1");
 
         NonTerminalBuilder nt1 = builder.root("ASSIGN");
