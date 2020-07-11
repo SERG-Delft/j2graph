@@ -33,6 +33,15 @@ public class JDTTest {
         System.out.println(dot.asString());
     }
 
+    @Test
+    void t3() {
+        String sourceCode = loadFixture("fixture/C.java");
+        List<MethodGraph> graphs = new JDT().parse(sourceCode);
+
+        out.accept(graphs.get(0), dot);
+        System.out.println(dot.asString());
+    }
+
     private String loadFixture(String fixture) {
         try {
             return new String (Files.readAllBytes(Paths.get(fixture)));
