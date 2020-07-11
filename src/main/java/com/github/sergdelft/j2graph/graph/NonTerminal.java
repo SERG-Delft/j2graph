@@ -42,4 +42,12 @@ public class NonTerminal {
     public List<Token> getTokens() {
         return tokens;
     }
+
+    @Override
+    public String toString() {
+        return "NonTerminal{" +
+                "id=" + id +
+                ", type=" + type +
+                '}';
+    }
 }

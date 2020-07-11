@@ -54,6 +54,8 @@ public class JDTVisitor extends ASTVisitor {
         if (inAMethod()) {
             Pair<Symbol, Token> pair = currentNonTerminal().symbol(node.getIdentifier());
 
+            // store the first name that appears so that we can set its
+            // "assignment from" later
             if(assignment && assignmentVariable == null) {
                 assignmentVariable = pair;
             }
@@ -106,15 +108,9 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(Assignment node) {
-        addNonTerminal(node);
-
         this.assignment = true;
-        node.getLeftHandSide().accept(this);
-        this.assignment = false;
-        currentNonTerminal().token(node.getOperator().toString());
-        node.getRightHandSide().accept(this);
-
-        return false;
+        addNonTerminal(node);
+        return super.visit(node);
     }
 
 
@@ -512,7 +508,8 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(VariableDeclarationFragment node) {
-        assignment = true;
+        this.assignment = true;
+
         addNonTerminal(node);
         return super.visit(node);
     }
@@ -570,6 +567,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(Assignment node) {
+        cleanVariableAssignment();
         popNonTerminal();
     }
 
@@ -868,7 +866,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(VariableDeclarationFragment node) {
-        assignment = false;
+        cleanVariableAssignment();
         popNonTerminal();
     }
 
@@ -886,6 +884,10 @@ public class JDTVisitor extends ASTVisitor {
         methodBuilders.pop();
     }
 
+    private void cleanVariableAssignment() {
+        this.assignment = false;
+        this.assignmentVariable = null;
+    }
 
     private static String type(ASTNode n) {
         return n.getClass().getSimpleName();
@@ -899,9 +901,11 @@ public class JDTVisitor extends ASTVisitor {
         NonTerminalBuilder nonTerminal = currentNonTerminal().nonTerminal(type(n));
         nonTerminals.get(currentMethod()).push(nonTerminal);
 
-        if(assignmentVariable!=null) {
+        // if there's a variable to assign, do it!
+        // TODO: what happens if there are more non terminals before the endVisit?
+        if(assignment && assignmentVariable!=null) {
             assignmentVariable.getRight().assignedFrom(currentNonTerminal().getNode());
-            assignmentVariable = null;
+            cleanVariableAssignment();
         }
     }
 

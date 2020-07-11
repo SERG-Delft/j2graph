@@ -11,4 +11,11 @@ public class NonTerminalType {
     public String getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "NonTerminalType{" +
+                "type='" + type + '\'' +
+                '}';
+    }
 }

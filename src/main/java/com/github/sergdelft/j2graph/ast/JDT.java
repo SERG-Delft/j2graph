@@ -25,6 +25,9 @@ public class JDT {
         JDTVisitor visitor = new JDTVisitor();
         cu.accept(visitor);
 
+        JDTDebuggingVisitor d = new JDTDebuggingVisitor();
+        cu.accept(d);
+
         return visitor.getGraphs();
     }
 }
