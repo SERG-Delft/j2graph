@@ -60,6 +60,6 @@ public class Token {
     }
 
     public boolean sameAs(String tokenName) {
-        return this.tokenName.endsWith(tokenName);
+        return this.tokenName.equals(tokenName);
     }
 }

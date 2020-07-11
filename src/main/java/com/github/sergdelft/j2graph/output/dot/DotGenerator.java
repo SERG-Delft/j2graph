@@ -9,9 +9,11 @@ import java.util.Set;
 
 public class DotGenerator {
 
-    private final StringBuilder builder = new StringBuilder();
+    private StringBuilder builder;
 
     public String generate(MethodGraph method) {
+
+        builder = new StringBuilder();
 
         builder.append(String.format("digraph %s {\n", method.getMethodName()));
 

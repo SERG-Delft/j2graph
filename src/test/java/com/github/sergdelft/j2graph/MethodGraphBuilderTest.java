@@ -20,7 +20,7 @@ public class MethodGraphBuilderTest {
         nt1.token("=");
 
         NonTerminalBuilder nt2 = nt1.nonTerminal("CALL");
-        nt2.token("get_foo", true);
+        nt2.token("get_foo", true, false);
         nt2.token("(");
         foo.getRight().assignedFrom(nt2.getNode());
 

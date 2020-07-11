@@ -1,6 +1,7 @@
 package com.github.sergdelft.j2graph.builder;
 
 import com.github.sergdelft.j2graph.graph.*;
+import com.github.sergdelft.j2graph.util.WordCounter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,28 +39,30 @@ public class MethodGraphBuilder {
     }
 
     Set<Vocabulary> addVocabulary(String tokenName) {
-        // todo: better split the words
-        String[] words = tokenName.split("_");
+        Collection<String> words = WordCounter.breakString(tokenName);
 
-        Arrays.stream(words)
+        words.stream()
                 .filter(word -> !vocabulary.containsKey(word))
                 .forEach(word -> vocabulary.put(word, new Vocabulary(word)));
 
-        return Arrays.stream(words)
+        return words.stream()
                 .map(word -> vocabulary.get(word))
                 .collect(Collectors.toSet());
     }
 
-    Token token(String tokenName) {
+    Token token(String tokenName, boolean nextLexicalUse) {
         // find last time this token appeared.
-        Optional<Token> lastToken = findLastToken(tokenName);
+        Optional<Token> lastToken = Optional.empty();
+        if(nextLexicalUse) {
+            lastToken = findLastToken(tokenName);
+        }
 
         // create a new token
         Token newToken = new Token(tokenName);
         tokens.addLast(newToken);
 
         // link new token to 'next lexical use' of the last time it appeared
-        if(lastToken.isPresent()) {
+        if(nextLexicalUse && lastToken.isPresent()) {
             lastToken.get().nextLexicalUse(newToken);
         }
 
@@ -89,5 +92,18 @@ public class MethodGraphBuilder {
 
     public void addNonTerminal(NonTerminal newNode) {
         this.nonTerminals.add(newNode);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MethodGraphBuilder that = (MethodGraphBuilder) o;
+        return methodName.equals(that.methodName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(methodName);
     }
 }

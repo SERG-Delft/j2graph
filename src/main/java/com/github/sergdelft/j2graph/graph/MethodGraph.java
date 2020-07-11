@@ -44,4 +44,11 @@ public class MethodGraph {
     public Collection<Vocabulary> getVocabulary() {
         return vocabulary;
     }
+
+    @Override
+    public String toString() {
+        return "MethodGraph{" +
+                "methodName='" + methodName + '\'' +
+                '}';
+    }
 }

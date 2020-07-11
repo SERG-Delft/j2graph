@@ -24,7 +24,7 @@ public class NonTerminalBuilder {
     }
 
     public Pair<Symbol, Token> symbol(String symbolName) {
-        Token token = token(symbolName, true);
+        Token token = token(symbolName, true, true);
 
         Symbol symbol = context.symbol(symbolName);
         token.forSymbol(symbol);
@@ -33,11 +33,11 @@ public class NonTerminalBuilder {
     }
 
     public Token token(String word) {
-        return token(word,false);
+        return token(word,false, false);
     }
 
-    public Token token(String word, boolean addVocabulary) {
-        Token token = context.token(word);
+    public Token token(String word, boolean addVocabulary, boolean nextLexicalUse) {
+        Token token = context.token(word,nextLexicalUse);
         node.addToken(token);
 
         if(addVocabulary) {
