@@ -66,7 +66,7 @@ public class DotVisitor implements Walker {
     }
 
     @Override
-    public void occurenceOf(Token t1, Symbol t2) {
+    public void occurrenceOf(Token t1, Symbol t2) {
         builder.append(String.format("\tT%d -> S%d [color=black, label=\"occurence of\"];\n", t1.getId(), t2.getId()));
     }
 

@@ -56,7 +56,7 @@ public class TestWalker implements Walker {
     }
 
     @Override
-    public void occurenceOf(Token t1, Symbol t2) {
+    public void occurrenceOf(Token t1, Symbol t2) {
 
     }
 

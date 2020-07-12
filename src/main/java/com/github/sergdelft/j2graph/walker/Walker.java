@@ -15,7 +15,7 @@ public interface Walker {
     void nextToken(Token t1, Token t2);
     void child(NonTerminal t1, Token t2);
     void child(NonTerminal t1, NonTerminal t2);
-    void occurenceOf(Token t1, Symbol t2);
+    void occurrenceOf(Token t1, Symbol t2);
     void subtokenOf(Vocabulary t1, Token t2);
     void returnsTo(NonTerminal t1, Token t2);
 

@@ -97,7 +97,7 @@ public class GraphWalker {
 
             if(possibleSymbol.isPresent()) {
                 Symbol symbol = possibleSymbol.get();
-                visitor.occurenceOf(token, symbol);
+                visitor.occurrenceOf(token, symbol);
             }
         }
     }
