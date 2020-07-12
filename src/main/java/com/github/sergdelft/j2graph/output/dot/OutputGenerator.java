@@ -9,37 +9,38 @@ import java.util.Set;
 
 public class OutputGenerator {
 
-    private MethodGraph method;
-    private MethodGraphVisitor visitor;
+    public void accept(ClassGraph classGraph, MethodGraphVisitor visitor) {
 
-    public void accept(MethodGraph method, MethodGraphVisitor visitor) {
-        this.method = method;
-        this.visitor = visitor;
+        visitor.className(classGraph.getClassName());
 
-        // info
-        visitor.methodName(method.getMethodName());
+        for (MethodGraph method : classGraph.getMethods()) {
+            // info
+            visitor.method(method.getMethodName(), method.getRoot());
 
-        // nodes
-        nonTerminals();
-        tokens();
-        symbols();
-        vocabulary();
+            // nodes
+            nonTerminals(method, visitor);
+            tokens(method, visitor);
+            symbols(method, visitor);
+            vocabulary(method, visitor);
 
-        // edges
-        tokenEdges();
-        nonTerminalTokenEdges();
-        nonTerminalEdges(method.getRoot());
-        tokenSymbols();
-        tokenVocabulary();
-        nextLexicalUse();
-        assignedFromEdges();
+            // edges
+            tokenEdges(method, visitor);
+            nonTerminalTokenEdges(method, visitor);
+            nonTerminalEdges(method.getRoot(), visitor);
+            tokenSymbols(method, visitor);
+            tokenVocabulary(method, visitor);
+            nextLexicalUse(method, visitor);
+            assignedFromEdges(method, visitor);
+
+            visitor.endMethod(method.getMethodName(), method.getRoot());
+        }
 
         // end of the visit
         visitor.end();
 
     }
 
-    private void assignedFromEdges() {
+    private void assignedFromEdges(MethodGraph method, MethodGraphVisitor visitor) {
         for (Token token : method.getTokens()) {
             Optional<NonTerminal> possibleAssignedFrom = token.getAssignedFrom();
             if(possibleAssignedFrom.isPresent()) {
@@ -49,7 +50,7 @@ public class OutputGenerator {
         }
     }
 
-    private void nextLexicalUse() {
+    private void nextLexicalUse(MethodGraph method, MethodGraphVisitor visitor) {
         for (Token token : method.getTokens()) {
             Optional<Token> possibleNextLexicalUse = token.getNextLexicalUse();
             if(possibleNextLexicalUse.isPresent()) {
@@ -60,7 +61,7 @@ public class OutputGenerator {
 
     }
 
-    private void tokenVocabulary() {
+    private void tokenVocabulary(MethodGraph method, MethodGraphVisitor visitor) {
         for (Token token : method.getTokens()) {
             Optional<Set<Vocabulary>> possibleVocabulary = token.getVocabulary();
             if(possibleVocabulary.isPresent()) {
@@ -72,7 +73,7 @@ public class OutputGenerator {
         }
     }
 
-    private void tokenSymbols() {
+    private void tokenSymbols(MethodGraph method, MethodGraphVisitor visitor) {
         for (Token token : method.getTokens()) {
             Optional<Symbol> possibleSymbol = token.getSymbol();
 
@@ -83,7 +84,7 @@ public class OutputGenerator {
         }
     }
 
-    private void nonTerminalTokenEdges() {
+    private void nonTerminalTokenEdges(MethodGraph method, MethodGraphVisitor visitor) {
         for (NonTerminal node : method.getNonTerminals()) {
             List<Token> tokens = node.getTokens();
             for (Token token : tokens) {
@@ -92,15 +93,15 @@ public class OutputGenerator {
         }
     }
 
-    private void nonTerminalEdges(NonTerminal parent) {
+    private void nonTerminalEdges(NonTerminal parent, MethodGraphVisitor visitor) {
         List<NonTerminal> children = parent.getChildren();
         for (NonTerminal child : children) {
             visitor.edge(parent, child);
-            nonTerminalEdges(child);
+            nonTerminalEdges(child, visitor);
         }
     }
 
-    private void tokenEdges() {
+    private void tokenEdges(MethodGraph method, MethodGraphVisitor visitor) {
         // there has to be at least two nodes to print the edge here
         LinkedList<Token> tokens = method.getTokens();
 
@@ -115,19 +116,19 @@ public class OutputGenerator {
         }
     }
 
-    private void vocabulary() {
+    private void vocabulary(MethodGraph method, MethodGraphVisitor visitor) {
         method.getVocabulary().stream().forEach(s -> visitor.vocabulary(s));
     }
 
-    private void symbols() {
+    private void symbols(MethodGraph method, MethodGraphVisitor visitor) {
         method.getSymbols().stream().forEach(s -> visitor.symbol(s));
     }
 
-    private void tokens() {
+    private void tokens(MethodGraph method, MethodGraphVisitor visitor) {
         method.getTokens().stream().forEach(t -> visitor.token(t));
     }
 
-    private void nonTerminals() {
+    private void nonTerminals(MethodGraph method, MethodGraphVisitor visitor) {
         method.getNonTerminals().stream().forEach(n -> visitor.nonTerminal(n));
     }
 }

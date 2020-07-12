@@ -1,12 +1,11 @@
 package com.github.sergdelft.j2graph.output.dot;
 
-import com.github.sergdelft.j2graph.graph.NonTerminal;
-import com.github.sergdelft.j2graph.graph.Symbol;
-import com.github.sergdelft.j2graph.graph.Token;
-import com.github.sergdelft.j2graph.graph.Vocabulary;
+import com.github.sergdelft.j2graph.graph.*;
 
 public interface MethodGraphVisitor {
-    void methodName(String methodName);
+    void className(String className);
+    void method(String methodName, NonTerminal root);
+
     void nonTerminal(NonTerminal nonTerminals);
     void token(Token tokens);
     void symbol(Symbol symbols);
@@ -23,5 +22,5 @@ public interface MethodGraphVisitor {
     void assignedFrom(Token t1, NonTerminal t2);
 
     void end();
-
+    void endMethod(String methodName, NonTerminal root);
 }

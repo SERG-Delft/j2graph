@@ -1,23 +1,21 @@
 package com.github.sergdelft.j2graph.builder;
 
 import com.github.sergdelft.j2graph.graph.*;
-import com.github.sergdelft.j2graph.util.WordCounter;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MethodGraphBuilder {
+    private final ClassGraphBuilder classGraph;
     private final String methodName;
     private NonTerminal root;
-    private Map<String, Vocabulary> vocabulary;
     private Map<String, Symbol> symbols;
     private LinkedList<Token> tokens;
     private List<NonTerminal> nonTerminals;
 
-    public MethodGraphBuilder(String methodName) {
+    public MethodGraphBuilder(ClassGraphBuilder classGraph, String methodName) {
+        this.classGraph = classGraph;
         this.methodName = methodName;
 
-        this.vocabulary = new HashMap<>();
         this.symbols = new HashMap<>();
         this.tokens = new LinkedList<>();
         this.nonTerminals = new ArrayList<>();
@@ -33,25 +31,18 @@ public class MethodGraphBuilder {
     }
 
     Symbol symbol(String symbolName) {
+        // keep a single node for each symbol, based on its name
         if(!this.symbols.containsKey(symbolName))
             this.symbols.put(symbolName, new Symbol(symbolName));
         return this.symbols.get(symbolName);
     }
 
     Set<Vocabulary> addVocabulary(String tokenName) {
-        Collection<String> words = WordCounter.breakString(tokenName);
-
-        words.stream()
-                .filter(word -> !vocabulary.containsKey(word))
-                .forEach(word -> vocabulary.put(word, new Vocabulary(word)));
-
-        return words.stream()
-                .map(word -> vocabulary.get(word))
-                .collect(Collectors.toSet());
+        return classGraph.addVocabulary(tokenName);
     }
 
     Token token(String tokenName, boolean nextLexicalUse) {
-        // find last time this token appeared.
+        // find last time this token appeared in the method.
         Optional<Token> lastToken = Optional.empty();
         if(nextLexicalUse) {
             lastToken = findLastToken(tokenName);
@@ -87,7 +78,7 @@ public class MethodGraphBuilder {
                 nonTerminals,
                 tokens,
                 symbols.values(),
-                vocabulary.values());
+                classGraph.getVocabulary());
     }
 
     public void addNonTerminal(NonTerminal newNode) {

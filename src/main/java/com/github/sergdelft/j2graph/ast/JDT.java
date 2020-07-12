@@ -1,17 +1,16 @@
 package com.github.sergdelft.j2graph.ast;
 
-import com.github.sergdelft.j2graph.graph.MethodGraph;
+import com.github.sergdelft.j2graph.graph.ClassGraph;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import java.util.List;
 import java.util.Map;
 
 public class JDT {
 
-    public List<MethodGraph> parse(String sourceCode) {
+    public ClassGraph parse(String sourceCode) {
         ASTParser parser = ASTParser.newParser(AST.JLS11);
 
         parser.setResolveBindings(false);
@@ -28,6 +27,6 @@ public class JDT {
         //JDTDebuggingVisitor d = new JDTDebuggingVisitor();
         //cu.accept(d);
 
-        return visitor.getGraphs();
+        return visitor.getClassGraph();
     }
 }

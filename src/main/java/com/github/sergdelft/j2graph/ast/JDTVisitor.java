@@ -1,31 +1,50 @@
 package com.github.sergdelft.j2graph.ast;
 
+import com.github.sergdelft.j2graph.builder.ClassGraphBuilder;
 import com.github.sergdelft.j2graph.builder.MethodGraphBuilder;
 import com.github.sergdelft.j2graph.builder.NonTerminalBuilder;
-import com.github.sergdelft.j2graph.graph.MethodGraph;
+import com.github.sergdelft.j2graph.graph.ClassGraph;
 import com.github.sergdelft.j2graph.graph.Symbol;
 import com.github.sergdelft.j2graph.graph.Token;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jdt.core.dom.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 public class JDTVisitor extends ASTVisitor {
 
-    private Stack<MethodGraphBuilder> methodBuilders = new Stack<>();
-    private Map<MethodGraphBuilder, Stack<NonTerminalBuilder>> nonTerminals = new HashMap<>();
-    private Pair<Symbol, Token> assignmentVariable;
+    private ClassGraphBuilder classBuilder;
+    private final Stack<MethodGraphBuilder> methodBuilders = new Stack<>();
+    private final Map<MethodGraphBuilder, Stack<NonTerminalBuilder>> nonTerminals = new HashMap<>();
 
-    private final List<MethodGraph> graphs = new ArrayList<>();
-    private boolean assignment;
+    private Pair<Symbol, Token> assignmentVariable;
+    private boolean assignmentMode;
+
+    @Override
+    public boolean visit(TypeDeclaration node) {
+        // only if no class was detected
+        // in the future, if we plan to support sub-classes, this needs to change
+        if(classBuilder==null) {
+            classBuilder = new ClassGraphBuilder(node.getName().getFullyQualifiedName());
+        }
+
+        return super.visit(node);
+    }
 
     @Override
     public boolean visit(MethodDeclaration node) {
-        MethodGraphBuilder builder = new MethodGraphBuilder(node.getName().getFullyQualifiedName());
-
-        methodBuilders.push(builder);
+        // whenever we visit a method, we create a builder for it
+        // and set the MethodDeclaration as its NonTerminal root
+        MethodGraphBuilder builder = new MethodGraphBuilder(classBuilder, node.getName().getFullyQualifiedName());
         NonTerminalBuilder root = builder.root(type(node));
 
+        // we push it to the list of method builders.
+        // this list, in most cases, will have a single element only.
+        // More elements, only when methods are declared inside methods,
+        // which, in this case, we separate them in two different methods.
+        methodBuilders.push(builder);
         nonTerminals.put(builder, new Stack<>());
         nonTerminals.get(builder).push(root);
 
@@ -34,7 +53,8 @@ public class JDTVisitor extends ASTVisitor {
 
     @Override
     public void endVisit(MethodDeclaration node) {
-        graphs.add(currentMethod().build());
+        // add the method to the class graph
+        classBuilder.addMethod(currentMethod().build());
         popMethod();
     }
 
@@ -51,12 +71,19 @@ public class JDTVisitor extends ASTVisitor {
 
 
     public boolean visit(SimpleName node) {
+        // whenever we visit a SimpleName, we mark it as a symbol.
+        // however, it might be that we are not inside a method
+        // e.g., field declaration
+        // so, we only collect it if we are inside a method
         if (inAMethod()) {
             Pair<Symbol, Token> pair = currentNonTerminal().symbol(node.getIdentifier());
 
-            // store the first name that appears so that we can set its
-            // "assignment from" later
-            if(assignment && assignmentVariable == null) {
+            // this symbol might appear as part of an assignment.
+            // we need to 'mark it' so that we can create the
+            // 'assigned from' edge.
+            // note that we only 'mark' the first symbol we visit, while
+            // in this mode. This is more to avoid any strange cases.
+            if(assignmentMode && assignmentVariable == null) {
                 assignmentVariable = pair;
             }
         }
@@ -108,7 +135,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(Assignment node) {
-        this.assignment = true;
+        this.assignmentMode = true;
         addNonTerminal(node);
         return super.visit(node);
     }
@@ -145,6 +172,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(CharacterLiteral node) {
+        // we add the escaped literal value as a token
         currentNonTerminal().token(node.getEscapedValue());
         return super.visit(node);
     }
@@ -246,6 +274,8 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(InfixExpression node) {
 
+        // an infix operation is [left operation right]
+        // we visit it manually, as to store the operation as a token
         addNonTerminal(node);
 
         node.getLeftOperand().accept(this);
@@ -321,11 +351,13 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(NullLiteral node) {
+        // we add the literal as token
         currentNonTerminal().token("null");
         return super.visit(node);
     }
 
     public boolean visit(NumberLiteral node) {
+        // we add the literal as token
         currentNonTerminal().token(node.getToken());
         return super.visit(node);
     }
@@ -367,6 +399,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(PrimitiveType node) {
         addNonTerminal(node);
+        // we add the literal as token
         currentNonTerminal().token(node.toString());
         return super.visit(node);
     }
@@ -408,6 +441,8 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(StringLiteral node) {
+        // we add the literal as token
+        // as this is a string, we add it to the vocabulary
         currentNonTerminal().token(node.getLiteralValue(), true, false);
         return super.visit(node);
     }
@@ -473,7 +508,9 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TypeLiteral node) {
-        currentNonTerminal().token(node.getType().toString());
+        // we add the type as a token
+        // and parse it as to increase our vocabulary
+        currentNonTerminal().token(node.getType().toString(),true,false);
         return super.visit(node);
     }
 
@@ -508,7 +545,13 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(VariableDeclarationFragment node) {
-        this.assignment = true;
+        // a variable was declared, which means we might need to be
+        // in assignment mode.
+        // unfortunately, JDT doesn't give in 'node' the right part
+        // of the expression, so we need to do this 'assignmentMode' workaround.
+        // we turn it on here, and later, in future visits, we collect the
+        // required information for the 'assigned from' edge.
+        this.assignmentMode = true;
 
         addNonTerminal(node);
         return super.visit(node);
@@ -885,7 +928,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     private void cleanVariableAssignment() {
-        this.assignment = false;
+        this.assignmentMode = false;
         this.assignmentVariable = null;
     }
 
@@ -901,9 +944,11 @@ public class JDTVisitor extends ASTVisitor {
         NonTerminalBuilder nonTerminal = currentNonTerminal().nonTerminal(type(n));
         nonTerminals.get(currentMethod()).push(nonTerminal);
 
-        // if there's a variable to assign, do it!
-        // TODO: what happens if there are more non terminals before the endVisit?
-        if(assignment && assignmentVariable!=null) {
+        // if we are in 'assignment mode', this means the assigned variable
+        // has this new non terminal as 'assigned from'.
+        // we now make the link!
+        boolean thereIsAnAssignedVariable = assignmentVariable != null;
+        if(assignmentMode && thereIsAnAssignedVariable) {
             assignmentVariable.getRight().assignedFrom(currentNonTerminal().getNode());
             cleanVariableAssignment();
         }
@@ -917,8 +962,8 @@ public class JDTVisitor extends ASTVisitor {
         return nonTerminals.get(currentMethod()).peek();
     }
 
-    public List<MethodGraph> getGraphs() {
-        return graphs;
+    public ClassGraph getClassGraph() {
+        return classBuilder.build();
     }
 
 }

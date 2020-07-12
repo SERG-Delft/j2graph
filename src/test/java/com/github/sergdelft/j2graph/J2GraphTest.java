@@ -1,44 +1,52 @@
 package com.github.sergdelft.j2graph;
 
 import com.github.sergdelft.j2graph.ast.JDT;
-import com.github.sergdelft.j2graph.graph.MethodGraph;
+import com.github.sergdelft.j2graph.graph.ClassGraph;
 import com.github.sergdelft.j2graph.output.dot.DotVisitor;
 import com.github.sergdelft.j2graph.output.dot.OutputGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 
-public class JDTTest {
+public class J2GraphTest {
 
     private final DotVisitor dot = new DotVisitor();
     private final OutputGenerator out = new OutputGenerator();
 
     @Test
-    void t1() {
+    void tA() {
         String sourceCode = loadFixture("fixture/A.java");
-        List<MethodGraph> graphs = new JDT().parse(sourceCode);
+        ClassGraph graph = new JDT().parse(sourceCode);
 
-        out.accept(graphs.get(0), dot);
+        out.accept(graph, dot);
         System.out.println(dot.asString());
     }
 
     @Test
-    void t2() {
+    void tB() {
         String sourceCode = loadFixture("fixture/B.java");
-        List<MethodGraph> graphs = new JDT().parse(sourceCode);
+        ClassGraph graph = new JDT().parse(sourceCode);
 
-        out.accept(graphs.get(0), dot);
+        out.accept(graph, dot);
         System.out.println(dot.asString());
     }
 
     @Test
-    void t3() {
+    void tC() {
         String sourceCode = loadFixture("fixture/C.java");
-        List<MethodGraph> graphs = new JDT().parse(sourceCode);
+        ClassGraph graph = new JDT().parse(sourceCode);
 
-        out.accept(graphs.get(0), dot);
+        out.accept(graph, dot);
+        System.out.println(dot.asString());
+    }
+
+    @Test
+    void tD() {
+        String sourceCode = loadFixture("fixture/D.java");
+        ClassGraph graph = new JDT().parse(sourceCode);
+
+        out.accept(graph, dot);
         System.out.println(dot.asString());
     }
 

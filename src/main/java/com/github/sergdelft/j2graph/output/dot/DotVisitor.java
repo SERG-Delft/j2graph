@@ -1,17 +1,24 @@
 package com.github.sergdelft.j2graph.output.dot;
 
-import com.github.sergdelft.j2graph.graph.NonTerminal;
-import com.github.sergdelft.j2graph.graph.Symbol;
-import com.github.sergdelft.j2graph.graph.Token;
-import com.github.sergdelft.j2graph.graph.Vocabulary;
+import com.github.sergdelft.j2graph.graph.*;
 
 public class DotVisitor implements MethodGraphVisitor {
 
     private StringBuilder builder = new StringBuilder();
 
     @Override
-    public void methodName(String methodName) {
-        builder.append(String.format("digraph %s {\n", methodName));
+    public void className(String className) {
+        builder.append(String.format("digraph %s {\n", className));
+        builder.append(String.format("\tC [label=\"class %s\"]\n", className));
+    }
+
+    @Override
+    public void method(String methodName, NonTerminal root) {
+        builder.append(String.format("\n\t// ------ begin method %s\n\n", methodName));
+
+        builder.append(String.format("\tM%d [label=\"M:%s\"];\n",root.getId(), methodName));
+        builder.append(String.format("\tC -> M%d\n", root.getId()));
+        builder.append(String.format("\tM%d -> NT%d\n", root.getId(), root.getId()));
     }
 
     public String asString() {
@@ -79,6 +86,11 @@ public class DotVisitor implements MethodGraphVisitor {
 
     @Override
     public void end() {
-        builder.append("}");
+        builder.append(String.format("}"));
+    }
+
+    @Override
+    public void endMethod(String methodName, NonTerminal root) {
+        builder.append(String.format("\t// ------ end method %s\n\n", methodName));
     }
 }

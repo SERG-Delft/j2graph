@@ -2,7 +2,6 @@ package com.github.sergdelft.j2graph.graph;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 public class MethodGraph {
     private final String methodName;
