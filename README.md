@@ -1,5 +1,7 @@
 # J2Graph
 
+[![Build Status](https://travis-ci.org/SERG-Delft/j2graph.svg?branch=master)](https://travis-ci.org/SERG-Delft/j2graph)
+
 Given a Java program (source code), J2Graph creates a graph
 representation of the source code.
 
