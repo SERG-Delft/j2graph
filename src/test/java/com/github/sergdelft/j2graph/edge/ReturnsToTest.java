@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ReturnsToTest extends TestBase {
 
-    private ClassGraph graph = run("E.java");
+    private ClassGraph graph = run("edge/ReturnsTo.java");
 
     @Test
     void all_return_tokens_linked_to_method_invocation() {

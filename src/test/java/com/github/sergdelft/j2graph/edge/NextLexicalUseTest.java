@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class NextLexicalUseTest extends TestBase {
 
-    private final ClassGraph graph = run("B.java");
+    private final ClassGraph graph = run("edge/NextLexicalUse.java");
 
     @Test
     void walk_through_next_lexical_uses() {

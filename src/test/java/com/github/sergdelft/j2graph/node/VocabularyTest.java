@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class VocabularyTest extends TestBase {
 
-    private ClassGraph graph = run("A.java");
+    private ClassGraph graph = run("node/Vocabulary.java");
 
     @Test
     void gets_all_words_from_code() {

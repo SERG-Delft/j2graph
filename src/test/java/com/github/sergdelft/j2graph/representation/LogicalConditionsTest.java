@@ -21,7 +21,7 @@ public class LogicalConditionsTest extends TestBase {
 
     @BeforeEach
     void run() {
-        graph = run("C.java");
+        graph = run("representation/LogicalConditions.java");
     }
 
     @Test

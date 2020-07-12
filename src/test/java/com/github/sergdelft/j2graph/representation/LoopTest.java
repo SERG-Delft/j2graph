@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LoopTest extends TestBase {
 
-    private ClassGraph graph = run("D.java");
+    private ClassGraph graph = run("representation/Loop.java");
 
     @Test
     void for_loops() {

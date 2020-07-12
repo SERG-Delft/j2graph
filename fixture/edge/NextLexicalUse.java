@@ -1,4 +1,4 @@
-class B {
+class NextLexicalUse {
 
     public void m1() {
         int a = 10;
