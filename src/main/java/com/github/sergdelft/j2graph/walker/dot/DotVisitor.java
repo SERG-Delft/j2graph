@@ -1,8 +1,9 @@
-package com.github.sergdelft.j2graph.output.dot;
+package com.github.sergdelft.j2graph.walker.dot;
 
 import com.github.sergdelft.j2graph.graph.*;
+import com.github.sergdelft.j2graph.walker.Walker;
 
-public class DotVisitor implements MethodGraphVisitor {
+public class DotVisitor implements Walker {
 
     private StringBuilder builder = new StringBuilder();
 

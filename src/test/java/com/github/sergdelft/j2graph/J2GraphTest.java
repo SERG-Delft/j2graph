@@ -2,8 +2,8 @@ package com.github.sergdelft.j2graph;
 
 import com.github.sergdelft.j2graph.ast.JDT;
 import com.github.sergdelft.j2graph.graph.ClassGraph;
-import com.github.sergdelft.j2graph.output.dot.DotVisitor;
-import com.github.sergdelft.j2graph.output.dot.OutputGenerator;
+import com.github.sergdelft.j2graph.walker.dot.DotVisitor;
+import com.github.sergdelft.j2graph.walker.GraphWalker;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public class J2GraphTest {
 
     private final DotVisitor dot = new DotVisitor();
-    private final OutputGenerator out = new OutputGenerator();
+    private final GraphWalker out = new GraphWalker();
 
     @Test
     void tA() {

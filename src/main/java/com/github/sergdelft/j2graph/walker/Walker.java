@@ -1,8 +1,8 @@
-package com.github.sergdelft.j2graph.output.dot;
+package com.github.sergdelft.j2graph.walker;
 
 import com.github.sergdelft.j2graph.graph.*;
 
-public interface MethodGraphVisitor {
+public interface Walker {
     void className(String className);
     void method(String methodName, NonTerminal root);
 
