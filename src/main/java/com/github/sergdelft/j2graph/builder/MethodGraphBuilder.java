@@ -85,6 +85,10 @@ public class MethodGraphBuilder {
         this.nonTerminals.add(newNode);
     }
 
+    public String getMethodName() {
+        return methodName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -31,16 +31,16 @@ public class NonTerminal {
         return id;
     }
 
-    public String getType() {
-        return type.getType();
-    }
-
     public List<NonTerminal> getChildren() {
         return children;
     }
 
     public List<Token> getTokens() {
         return tokens;
+    }
+
+    public String getName() {
+        return type.getType();
     }
 
     @Override

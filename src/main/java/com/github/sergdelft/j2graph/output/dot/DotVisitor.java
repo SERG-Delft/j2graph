@@ -28,7 +28,7 @@ public class DotVisitor implements MethodGraphVisitor {
     @Override
     public void nonTerminal(NonTerminal nonTerminal) {
         builder.append(String.format("\tNT%d ",nonTerminal.getId()));
-        builder.append(String.format("[label=\"NT:%s\"];\n", nonTerminal.getType()));
+        builder.append(String.format("[label=\"NT:%s\"];\n", nonTerminal.getName()));
     }
 
     @Override
@@ -72,6 +72,11 @@ public class DotVisitor implements MethodGraphVisitor {
     @Override
     public void subtokenOf(Vocabulary t1, Token t2) {
         builder.append(String.format("\tV%d -> T%d [color=green, label=\"subtoken of\"];\n", t1.getId(), t2.getId()));
+    }
+
+    @Override
+    public void returnsTo(NonTerminal t1, Token t2) {
+        builder.append(String.format("\tT%d -> NT%d [color=black, style=dotted, label=\"returns to\"];\n", t2.getId(), t1.getId()));
     }
 
     @Override

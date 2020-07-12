@@ -15,14 +15,6 @@ public class NonTerminalBuilder {
         this.node = node;
     }
 
-    public NonTerminalBuilder nonTerminal(String type) {
-        NonTerminal newNode = new NonTerminal(new NonTerminalType(type));
-        this.node.addChild(newNode);
-        this.context.addNonTerminal(newNode);
-
-        return new NonTerminalBuilder(context, newNode);
-    }
-
     public Pair<Symbol, Token> symbol(String symbolName) {
         Token token = token(symbolName, true, true);
 
@@ -50,5 +42,22 @@ public class NonTerminalBuilder {
 
     public NonTerminal getNode() {
         return node;
+    }
+
+    private NonTerminalBuilder nonTerminal(NonTerminal newNode) {
+        this.node.addChild(newNode);
+        this.context.addNonTerminal(newNode);
+
+        return new NonTerminalBuilder(context, newNode);
+    }
+
+    public NonTerminalBuilder nonTerminal(String type) {
+        NonTerminal newNode = new NonTerminal(new NonTerminalType(type));
+        return nonTerminal(newNode);
+    }
+
+    public NonTerminalBuilder methodInvocation(String type, String invokedMethod) {
+        NonTerminal newNode = new NonTerminalMethodInvocation(new NonTerminalType(type), invokedMethod);
+        return nonTerminal(newNode);
     }
 }

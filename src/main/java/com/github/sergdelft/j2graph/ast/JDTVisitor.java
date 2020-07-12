@@ -9,16 +9,33 @@ import com.github.sergdelft.j2graph.graph.Token;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jdt.core.dom.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
+
+import static com.github.sergdelft.j2graph.ast.JDTUtils.getQualifiedMethodFullName;
 
 public class JDTVisitor extends ASTVisitor {
 
+    // the builder of the class we are visiting
+    // for now, it does not support sub-classes
     private ClassGraphBuilder classBuilder;
+
+    // the method builder of the method being visited
+    // a stack as to support nested methods.
     private final Stack<MethodGraphBuilder> methodBuilders = new Stack<>();
+
+    // the list of non terminal nodes of a given method builder.
+    // it's a stack as to keep the current node being visited
     private final Map<MethodGraphBuilder, Stack<NonTerminalBuilder>> nonTerminals = new HashMap<>();
 
+    // keep a map with all method invocations
+    // as to link the 'return' edges later
+    // key=method, value=methods it invokes
+    private final Map<String, Set<String>> methodInvocations = new HashMap<>();
+
+    // assignment mode, on or off
+    // the assignment mode tracks symbols visited, so that we can assign
+    // the 'assigned from' edge later
+    // (see where these variables are used to understand how we do)
     private Pair<Symbol, Token> assignmentVariable;
     private boolean assignmentMode;
 
@@ -27,7 +44,7 @@ public class JDTVisitor extends ASTVisitor {
         // only if no class was detected
         // in the future, if we plan to support sub-classes, this needs to change
         if(classBuilder==null) {
-            classBuilder = new ClassGraphBuilder(node.getName().getFullyQualifiedName());
+            classBuilder = new ClassGraphBuilder(node.getName().getFullyQualifiedName(), methodInvocations);
         }
 
         return super.visit(node);
@@ -37,7 +54,8 @@ public class JDTVisitor extends ASTVisitor {
     public boolean visit(MethodDeclaration node) {
         // whenever we visit a method, we create a builder for it
         // and set the MethodDeclaration as its NonTerminal root
-        MethodGraphBuilder builder = new MethodGraphBuilder(classBuilder, node.getName().getFullyQualifiedName());
+        String methodQualifiedName = getQualifiedMethodFullName(node);
+        MethodGraphBuilder builder = new MethodGraphBuilder(classBuilder, methodQualifiedName);
         NonTerminalBuilder root = builder.root(type(node));
 
         // we push it to the list of method builders.
@@ -48,19 +66,30 @@ public class JDTVisitor extends ASTVisitor {
         nonTerminals.put(builder, new Stack<>());
         nonTerminals.get(builder).push(root);
 
+        // create an entry in the method invocations map
+        // as we'll keep score of all its method invocations
+        methodInvocations.put(methodQualifiedName, new HashSet<>());
+
         return super.visit(node);
     }
 
     @Override
     public void endVisit(MethodDeclaration node) {
-        // add the method to the class graph
-        classBuilder.addMethod(currentMethod().build());
+        // add the method builder to the class graph builder
+        classBuilder.addMethod(currentMethod());
         popMethod();
     }
 
     @Override
     public boolean visit(MethodInvocation node) {
-        addNonTerminal(node);
+        String invokedMethod = getQualifiedMethodFullName(node);
+
+        addMethodInvocation(node, invokedMethod);
+
+        // add to the map
+        methodInvocations.get(currentMethod().getMethodName())
+                .add(invokedMethod);
+
         return super.visit(node);
     }
 
@@ -421,6 +450,8 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ReturnStatement node) {
         addNonTerminal(node);
+        // add 'return' as a token
+        currentNonTerminal().token("return");
         return super.visit(node);
     }
 
@@ -944,6 +975,17 @@ public class JDTVisitor extends ASTVisitor {
         NonTerminalBuilder nonTerminal = currentNonTerminal().nonTerminal(type(n));
         nonTerminals.get(currentMethod()).push(nonTerminal);
 
+        checkAssignmentMode();
+    }
+
+    private void addMethodInvocation(ASTNode n, String invokedMethod) {
+        NonTerminalBuilder nonTerminal = currentNonTerminal().methodInvocation(type(n), invokedMethod);
+        nonTerminals.get(currentMethod()).push(nonTerminal);
+
+        checkAssignmentMode();
+    }
+
+    private void checkAssignmentMode() {
         // if we are in 'assignment mode', this means the assigned variable
         // has this new non terminal as 'assigned from'.
         // we now make the link!

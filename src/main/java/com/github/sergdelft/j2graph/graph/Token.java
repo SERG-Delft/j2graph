@@ -1,7 +1,6 @@
 package com.github.sergdelft.j2graph.graph;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class Token {
     private static int COUNTER = 0;
@@ -13,6 +12,7 @@ public class Token {
     private NonTerminal assignedFrom;
     private Token nextLexicalUse;
     private Set<Vocabulary> vocabulary;
+    private List<NonTerminal> returnsTo;
 
     public Token(String tokenName) {
         this.id = ++COUNTER;
@@ -61,5 +61,20 @@ public class Token {
 
     public boolean sameAs(String tokenName) {
         return this.tokenName.equals(tokenName);
+    }
+
+    public boolean isReturn() {
+        return tokenName.equals("return");
+    }
+
+    public void returnsTo(NonTerminalMethodInvocation nonTerminal) {
+        if(returnsTo == null)
+            returnsTo = new ArrayList<>();
+
+        returnsTo.add(nonTerminal);
+    }
+
+    public List<NonTerminal> getListOfNonTerminalsToReturnTo() {
+        return returnsTo == null ? Collections.emptyList() : returnsTo;
     }
 }

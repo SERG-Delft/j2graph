@@ -13,8 +13,8 @@ public class JDT {
     public ClassGraph parse(String sourceCode) {
         ASTParser parser = ASTParser.newParser(AST.JLS11);
 
-        parser.setResolveBindings(false);
-        parser.setBindingsRecovery(false);
+        parser.setResolveBindings(true);
+        parser.setBindingsRecovery(true);
 
         Map<String, String> options = JavaCore.getOptions();
         JavaCore.setComplianceOptions(JavaCore.VERSION_11, options);

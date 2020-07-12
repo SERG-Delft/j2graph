@@ -8,13 +8,15 @@ import java.util.stream.Collectors;
 
 public class ClassGraphBuilder {
     private final String className;
+    private final Map<String, Set<String>> methodInvocations;
     private final Map<String, Vocabulary> vocabulary;
-    private final List<MethodGraph> methods;
+    private final List<MethodGraphBuilder> methodBuilders;
 
-    public ClassGraphBuilder(String className) {
+    public ClassGraphBuilder(String className, Map<String, Set<String>> methodInvocations) {
         this.className = className;
+        this.methodInvocations = methodInvocations;
         this.vocabulary = new HashMap<>();
-        this.methods = new ArrayList<>();
+        this.methodBuilders = new ArrayList<>();
     }
 
     Set<Vocabulary> addVocabulary(String tokenName) {
@@ -37,10 +39,42 @@ public class ClassGraphBuilder {
     }
 
     public ClassGraph build() {
+        List<MethodGraph> methods = new ArrayList<>();
+
+        // we build method by method
+        for (MethodGraphBuilder methodBuilder : methodBuilders) {
+            MethodGraph methodGraph = methodBuilder.build();
+            methods.add(methodGraph);
+        }
+
+        // Map the map invocations.
+        // link the method 'returns' NonTerminal to the
+        // MethodInvocation non terminals of the other methods
+        for (MethodGraph method : methods) {
+            List<NonTerminalMethodInvocation> invokedMethods = method.methodInvocations();
+
+            for (NonTerminalMethodInvocation invokedMethodNT : invokedMethods) {
+                String invokedMethod = invokedMethodNT.getInvokedMethod();
+
+                // if the invoked method is actually part of the class,
+                // we then create a returns to edge from the invoked method to the
+                // MethodInvocation non terminal node.
+                Optional<MethodGraph> invokedMethodGraph = findMethod(methods, invokedMethod);
+                if(invokedMethodGraph.isPresent()) {
+                    invokedMethodGraph.get().returnsTo(invokedMethodNT);
+                }
+            }
+        }
+
         return new ClassGraph(className, methods);
     }
 
-    public void addMethod(MethodGraph graph) {
-        methods.add(graph);
+    private Optional<MethodGraph> findMethod(List<MethodGraph> methods, String invokedMethod) {
+        return methods.stream().filter(m -> m.getMethodName().equals(invokedMethod))
+                .findFirst();
+    }
+
+    public void addMethod(MethodGraphBuilder graph) {
+        methodBuilders.add(graph);
     }
 }

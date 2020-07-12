@@ -50,6 +50,15 @@ public class J2GraphTest {
         System.out.println(dot.asString());
     }
 
+    @Test
+    void tE() {
+        String sourceCode = loadFixture("fixture/E.java");
+        ClassGraph graph = new JDT().parse(sourceCode);
+
+        out.accept(graph, dot);
+        System.out.println(dot.asString());
+    }
+
     private String loadFixture(String fixture) {
         try {
             return new String (Files.readAllBytes(Paths.get(fixture)));

@@ -17,6 +17,7 @@ public interface MethodGraphVisitor {
     void child(NonTerminal t1, NonTerminal t2);
     void occurenceOf(Token t1, Symbol t2);
     void subtokenOf(Vocabulary t1, Token t2);
+    void returnsTo(NonTerminal t1, Token t2);
 
     void nextLexicalUse(Token t1, Token t2);
     void assignedFrom(Token t1, NonTerminal t2);

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class OutputGenerator {
 
@@ -31,6 +32,7 @@ public class OutputGenerator {
             tokenVocabulary(method, visitor);
             nextLexicalUse(method, visitor);
             assignedFromEdges(method, visitor);
+            returnsTo(method, visitor);
 
             visitor.endMethod(method.getMethodName(), method.getRoot());
         }
@@ -38,6 +40,22 @@ public class OutputGenerator {
         // end of the visit
         visitor.end();
 
+    }
+
+    private void returnsTo(MethodGraph method, MethodGraphVisitor visitor) {
+        // find all return tokens in the current method
+        List<Token> returnTokens = method.getTokens().stream()
+                .filter(t -> t.isReturn())
+                .collect(Collectors.toList());
+
+        for (Token returnToken : returnTokens) {
+
+            // if the return token has a list of non terminals to connect
+            // we then invoke the visitor
+            returnToken
+                .getListOfNonTerminalsToReturnTo()
+                .forEach(nt -> visitor.returnsTo(nt, returnToken));
+        }
     }
 
     private void assignedFromEdges(MethodGraph method, MethodGraphVisitor visitor) {

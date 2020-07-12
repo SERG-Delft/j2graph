@@ -2,6 +2,8 @@ package com.github.sergdelft.j2graph.graph;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MethodGraph {
     private final String methodName;
@@ -49,5 +51,19 @@ public class MethodGraph {
         return "MethodGraph{" +
                 "methodName='" + methodName + '\'' +
                 '}';
+    }
+
+    // finds all NonTerminal nodes that are actual method invocations
+    public List<NonTerminalMethodInvocation> methodInvocations() {
+        return
+            nonTerminals.stream().filter(nt -> nt instanceof NonTerminalMethodInvocation)
+                .map(nt -> (NonTerminalMethodInvocation) nt)
+                .collect(Collectors.toList());
+    }
+
+    // find all 'return' tokens and add returns to edge to the specified non terminal
+    public void returnsTo(NonTerminalMethodInvocation nonTerminal) {
+        tokens.stream().filter(t -> t.isReturn())
+                .forEach(t -> t.returnsTo(nonTerminal));
     }
 }
