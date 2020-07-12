@@ -22,7 +22,7 @@ public class MethodGraphBuilder {
     }
 
     public NonTerminalBuilder root(String type) {
-        NonTerminal node = new NonTerminal(new NonTerminalType(type));
+        NonTerminal node = new NonTerminal(type);
         root = node;
 
         this.nonTerminals.add(node);

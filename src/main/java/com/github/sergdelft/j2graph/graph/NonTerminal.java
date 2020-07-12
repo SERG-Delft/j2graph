@@ -7,11 +7,11 @@ public class NonTerminal {
     private static int COUNTER = 0;
 
     private int id;
-    private NonTerminalType type;
+    private String type;
     private List<NonTerminal> children;
     private List<Token> tokens;
 
-    public NonTerminal(NonTerminalType type) {
+    public NonTerminal(String type) {
         this.id = ++COUNTER;
 
         this.type = type;
@@ -40,7 +40,7 @@ public class NonTerminal {
     }
 
     public String getName() {
-        return type.getType();
+        return type;
     }
 
     @Override

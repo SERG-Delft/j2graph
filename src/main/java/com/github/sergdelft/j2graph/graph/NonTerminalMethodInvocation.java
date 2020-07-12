@@ -3,7 +3,7 @@ package com.github.sergdelft.j2graph.graph;
 public class NonTerminalMethodInvocation extends NonTerminal {
     private final String invokedMethod;
 
-    public NonTerminalMethodInvocation(NonTerminalType type, String invokedMethod) {
+    public NonTerminalMethodInvocation(String type, String invokedMethod) {
         super(type);
         this.invokedMethod = invokedMethod;
     }

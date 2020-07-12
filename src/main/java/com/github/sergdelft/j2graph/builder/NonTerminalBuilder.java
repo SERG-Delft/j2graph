@@ -52,12 +52,12 @@ public class NonTerminalBuilder {
     }
 
     public NonTerminalBuilder nonTerminal(String type) {
-        NonTerminal newNode = new NonTerminal(new NonTerminalType(type));
+        NonTerminal newNode = new NonTerminal(type);
         return nonTerminal(newNode);
     }
 
     public NonTerminalBuilder methodInvocation(String type, String invokedMethod) {
-        NonTerminal newNode = new NonTerminalMethodInvocation(new NonTerminalType(type), invokedMethod);
+        NonTerminal newNode = new NonTerminalMethodInvocation(type, invokedMethod);
         return nonTerminal(newNode);
     }
 }
