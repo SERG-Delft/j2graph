@@ -12,13 +12,13 @@ public interface MethodGraphVisitor {
     void vocabulary(Vocabulary vocabulary);
 
     // edges
-    void edge(Token t1, Token t2);
-    void edge(NonTerminal t1, Token t2);
-    void edge(NonTerminal t1, NonTerminal t2);
-    void edge(Token t1, Symbol t2);
-    void edge(Vocabulary t1, Token t2);
+    void nextToken(Token t1, Token t2);
+    void child(NonTerminal t1, Token t2);
+    void child(NonTerminal t1, NonTerminal t2);
+    void occurenceOf(Token t1, Symbol t2);
+    void subtokenOf(Vocabulary t1, Token t2);
 
-    void lexicalUse(Token t1, Token t2);
+    void nextLexicalUse(Token t1, Token t2);
     void assignedFrom(Token t1, NonTerminal t2);
 
     void end();

@@ -55,7 +55,7 @@ public class OutputGenerator {
             Optional<Token> possibleNextLexicalUse = token.getNextLexicalUse();
             if(possibleNextLexicalUse.isPresent()) {
                 Token nextLexicalUse = possibleNextLexicalUse.get();
-                visitor.lexicalUse(token, nextLexicalUse);
+                visitor.nextLexicalUse(token, nextLexicalUse);
             }
         }
 
@@ -67,7 +67,7 @@ public class OutputGenerator {
             if(possibleVocabulary.isPresent()) {
                 Set<Vocabulary> vocabulary = possibleVocabulary.get();
                 for (Vocabulary word : vocabulary) {
-                    visitor.edge(word, token);
+                    visitor.subtokenOf(word, token);
                 }
             }
         }
@@ -79,7 +79,7 @@ public class OutputGenerator {
 
             if(possibleSymbol.isPresent()) {
                 Symbol symbol = possibleSymbol.get();
-                visitor.edge(token, symbol);
+                visitor.occurenceOf(token, symbol);
             }
         }
     }
@@ -88,7 +88,7 @@ public class OutputGenerator {
         for (NonTerminal node : method.getNonTerminals()) {
             List<Token> tokens = node.getTokens();
             for (Token token : tokens) {
-                visitor.edge(node, token);
+                visitor.child(node, token);
             }
         }
     }
@@ -96,7 +96,7 @@ public class OutputGenerator {
     private void nonTerminalEdges(NonTerminal parent, MethodGraphVisitor visitor) {
         List<NonTerminal> children = parent.getChildren();
         for (NonTerminal child : children) {
-            visitor.edge(parent, child);
+            visitor.child(parent, child);
             nonTerminalEdges(child, visitor);
         }
     }
@@ -112,7 +112,7 @@ public class OutputGenerator {
             Token currentToken = tokens.get(i);
             Token previousToken = tokens.get(i - 1);
 
-            visitor.edge(previousToken, currentToken);
+            visitor.nextToken(previousToken, currentToken);
         }
     }
 
