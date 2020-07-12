@@ -238,6 +238,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(DoStatement node) {
         addNonTerminal(node);
+        currentNonTerminal().token("do");
         return super.visit(node);
     }
 
@@ -248,6 +249,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(EnhancedForStatement node) {
         addNonTerminal(node);
+        currentNonTerminal().token("for");
         return super.visit(node);
     }
 
@@ -288,11 +290,14 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ForStatement node) {
         addNonTerminal(node);
+        currentNonTerminal().token("for");
+
         return super.visit(node);
     }
 
     public boolean visit(IfStatement node) {
         addNonTerminal(node);
+        currentNonTerminal().token("if");
         return super.visit(node);
     }
 
@@ -590,6 +595,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(WhileStatement node) {
         addNonTerminal(node);
+        currentNonTerminal().token("while");
         return super.visit(node);
     }
 
@@ -1004,7 +1010,7 @@ public class JDTVisitor extends ASTVisitor {
         return nonTerminals.get(currentMethod()).peek();
     }
 
-    public ClassGraph getClassGraph() {
+    public ClassGraph buildClassGraph() {
         return classBuilder.build();
     }
 

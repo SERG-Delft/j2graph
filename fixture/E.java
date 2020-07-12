@@ -6,6 +6,9 @@ class E {
     }
 
     int m2() {
-        return 42;
+        if(10 > 20)
+            return 42;
+        else
+            return 30;
     }
 }

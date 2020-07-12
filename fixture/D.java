@@ -8,8 +8,12 @@ class D {
         return total;
     }
 
-    public int m2(int x) {
-        int a = x * 3;
-        return a;
+    public void m2() {
+        int total = 0;
+        int i = 0;
+        while(i > 10) {
+            total += i;
+        }
+        return total;
     }
 }

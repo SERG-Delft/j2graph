@@ -27,6 +27,6 @@ public class JDT {
         //JDTDebuggingVisitor d = new JDTDebuggingVisitor();
         //cu.accept(d);
 
-        return visitor.getClassGraph();
+        return visitor.buildClassGraph();
     }
 }

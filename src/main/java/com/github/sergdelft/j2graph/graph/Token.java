@@ -77,4 +77,12 @@ public class Token {
     public List<NonTerminal> getListOfNonTerminalsToReturnTo() {
         return returnsTo == null ? Collections.emptyList() : returnsTo;
     }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "tokenName='" + tokenName + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
