@@ -302,8 +302,8 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(ImportDeclaration node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        /* do nothing */
+        return false;
     }
 
     public boolean visit(InfixExpression node) {
@@ -745,7 +745,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(ImportDeclaration node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(InfixExpression node) {
