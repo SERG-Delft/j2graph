@@ -45,9 +45,11 @@ public class JDTVisitor extends ASTVisitor {
         // in the future, if we plan to support sub-classes, this needs to change
         if(classBuilder==null) {
             classBuilder = new ClassGraphBuilder(node.getName().getFullyQualifiedName(), methodInvocations);
+            return super.visit(node);
+        } else {
+            // TODO: it's a sub-class, we ignore it.
+            return false;
         }
-
-        return super.visit(node);
     }
 
     @Override
@@ -499,6 +501,11 @@ public class JDTVisitor extends ASTVisitor {
         return super.visit(node);
     }
 
+    public boolean visit(Javadoc node) {
+        /* do nothing */
+        return false;
+    }
+
     public boolean visit(MemberValuePair node) {
         if(!inAMethod())
             return false;
@@ -881,6 +888,10 @@ public class JDTVisitor extends ASTVisitor {
     // ------------------------------------------------------------------------------------
 
     public void endVisit(Modifier node) {
+
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
@@ -897,108 +908,186 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(ArrayAccess node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ArrayCreation node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ArrayInitializer node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ArrayType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(AssertStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(Assignment node) {
         cleanVariableAssignment();
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(Block node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(BlockComment node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
 
     public void endVisit(BreakStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(CastExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(CatchClause node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ClassInstanceCreation node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ConditionalExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ConstructorInvocation node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ContinueStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(CreationReference node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(DoStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(EmptyStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(EnhancedForStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(EnumConstantDeclaration node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(EnumDeclaration node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ExportsDirective node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ExpressionMethodReference node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ExpressionStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(Dimension node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(FieldAccess node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
@@ -1007,10 +1096,16 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(ForStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(IfStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
@@ -1019,58 +1114,97 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(InfixExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(InstanceofExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(Initializer node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(Javadoc node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(LabeledStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(LambdaExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(LineComment node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(MarkerAnnotation node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(MemberRef node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(MemberValuePair node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(MethodRef node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(MethodRefParameter node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ModuleDeclaration node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(NameQualifiedType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
@@ -1079,6 +1213,9 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(OpensDirective node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
@@ -1087,46 +1224,79 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(ParameterizedType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ParenthesizedExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(PostfixExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(PrefixExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(PrimitiveType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ProvidesDirective node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(QualifiedName node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(QualifiedType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(RequiresDirective node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ReturnStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SimpleType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
@@ -1135,96 +1305,165 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(SingleVariableDeclaration node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SuperConstructorInvocation node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SuperFieldAccess node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SuperMethodInvocation node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SuperMethodReference node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SwitchCase node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SwitchStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(SynchronizedStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(TagElement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(TextElement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ThisExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(ThrowStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(TryStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
 
     public void endVisit(TypeMethodReference node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(TypeParameter node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(UnionType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(UsesDirective node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(IntersectionType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(VariableDeclarationExpression node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(VariableDeclarationStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(VariableDeclarationFragment node) {
+        if(!inAMethod())
+            return;
+
         cleanVariableAssignment();
         popNonTerminal();
     }
 
     public void endVisit(WhileStatement node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
     public void endVisit(WildcardType node) {
+        if(!inAMethod())
+            return;
+
         popNonTerminal();
     }
 
