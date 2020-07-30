@@ -119,51 +119,69 @@ public class JDTVisitor extends ASTVisitor {
         return true;
     }
 
-    private boolean inAMethod() {
-        return !methodBuilders.isEmpty() && !nonTerminals.isEmpty();
-    }
-
     public boolean visit(AnnotationTypeDeclaration node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        return false;
     }
 
     public boolean visit(AnnotationTypeMemberDeclaration node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        return false;
     }
 
     public boolean visit(AnonymousClassDeclaration node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        // TODO: visit anonymous classes
+        return false;
     }
 
     public boolean visit(ArrayAccess node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ArrayCreation node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ArrayInitializer node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ArrayType node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(AssertStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(Assignment node) {
+
+        if(!inAMethod())
+            return false;
+
         this.assignmentMode = true;
         addNonTerminal(node);
         return super.visit(node);
@@ -171,124 +189,216 @@ public class JDTVisitor extends ASTVisitor {
 
 
     public boolean visit(Block node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(BlockComment node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(BooleanLiteral node) {
+
+        if(!inAMethod())
+            return false;
+
         currentNonTerminal().token("" + node.booleanValue());
         return super.visit(node);
     }
 
     public boolean visit(BreakStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(CastExpression node) {
+        if(!inAMethod())
+            return false;
+
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(CatchClause node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(CharacterLiteral node) {
+
+        if(!inAMethod())
+            return false;
+
         // we add the escaped literal value as a token
         currentNonTerminal().token(node.getEscapedValue());
         return super.visit(node);
     }
 
     public boolean visit(ClassInstanceCreation node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ConditionalExpression node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ConstructorInvocation node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ContinueStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(CreationReference node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(Dimension node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(DoStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         currentNonTerminal().token("do");
         return super.visit(node);
     }
 
     public boolean visit(EmptyStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(EnhancedForStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         currentNonTerminal().token("for");
         return super.visit(node);
     }
 
     public boolean visit(EnumConstantDeclaration node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(EnumDeclaration node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ExportsDirective node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ExpressionMethodReference node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ExpressionStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(FieldAccess node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(FieldDeclaration node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        // we do not need to visit field declarations.
+        return false;
     }
 
     public boolean visit(ForStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         currentNonTerminal().token("for");
 
@@ -296,6 +406,10 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(IfStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         currentNonTerminal().token("if");
         return super.visit(node);
@@ -307,6 +421,10 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(InfixExpression node) {
+
+        if(!inAMethod())
+            return false;
+
 
         // an infix operation is [left operation right]
         // we visit it manually, as to store the operation as a token
@@ -320,90 +438,134 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(Initializer node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        // TODO: handle static initializer methods
+        return false;
     }
 
     public boolean visit(InstanceofExpression node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(IntersectionType node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(LabeledStatement node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(LambdaExpression node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(LineComment node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(MarkerAnnotation node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        return false;
     }
 
     public boolean visit(MemberRef node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(MemberValuePair node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(MethodRef node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(MethodRefParameter node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(NameQualifiedType node) {
+
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(NormalAnnotation node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        return false;
     }
 
     public boolean visit(NullLiteral node) {
+        if(!inAMethod())
+            return false;
+
         // we add the literal as token
         currentNonTerminal().token("null");
         return super.visit(node);
     }
 
     public boolean visit(NumberLiteral node) {
+        if(!inAMethod())
+            return false;
+
         // we add the literal as token
         currentNonTerminal().token(node.getToken());
         return super.visit(node);
     }
 
     public boolean visit(OpensDirective node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(PackageDeclaration node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        /* do nothing */
+        return false;
     }
 
     public boolean visit(ParameterizedType node) {
@@ -412,26 +574,41 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(ParenthesizedExpression node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(PostfixExpression node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(PrefixExpression node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ProvidesDirective node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(PrimitiveType node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         // we add the literal as token
         currentNonTerminal().token(node.toString());
@@ -439,21 +616,33 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(QualifiedName node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(QualifiedType node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(RequiresDirective node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ReturnStatement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         // add 'return' as a token
         currentNonTerminal().token("return");
@@ -461,22 +650,30 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SimpleType node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         currentNonTerminal().token(node.getName().toString());
         return false;
     }
 
     public boolean visit(SingleMemberAnnotation node) {
-        addNonTerminal(node);
-        return super.visit(node);
+        return false;
     }
 
     public boolean visit(SingleVariableDeclaration node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(StringLiteral node) {
+        if(!inAMethod())
+            return false;
+
         // we add the literal as token
         // as this is a string, we add it to the vocabulary
         currentNonTerminal().token(node.getLiteralValue(), true, false);
@@ -484,66 +681,105 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SuperConstructorInvocation node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(SuperFieldAccess node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(SuperMethodInvocation node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(SuperMethodReference node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(SwitchCase node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(SwitchStatement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(SynchronizedStatement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(TagElement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(TextElement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ThisExpression node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(ThrowStatement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(TryStatement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(TypeLiteral node) {
+        if(!inAMethod())
+            return false;
+
         // we add the type as a token
         // and parse it as to increase our vocabulary
         currentNonTerminal().token(node.getType().toString(),true,false);
@@ -551,36 +787,57 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TypeMethodReference node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(TypeParameter node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(UnionType node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(UsesDirective node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(VariableDeclarationExpression node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(VariableDeclarationStatement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(VariableDeclarationFragment node) {
+        if(!inAMethod())
+            return false;
+
         // a variable was declared, which means we might need to be
         // in assignment mode.
         // unfortunately, JDT doesn't give in 'node' the right part
@@ -594,36 +851,49 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(WhileStatement node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         currentNonTerminal().token("while");
         return super.visit(node);
     }
 
     public boolean visit(WildcardType node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         return super.visit(node);
     }
 
     public boolean visit(Modifier node) {
+        if(!inAMethod())
+            return false;
+
         addNonTerminal(node);
         currentNonTerminal().token(node.toString());
         return super.visit(node);
     }
+
+    // ------------------------------------------------------------------------------------
+    // the end visits basically pop the current non terminal
+    // ------------------------------------------------------------------------------------
 
     public void endVisit(Modifier node) {
         popNonTerminal();
     }
 
     public void endVisit(AnnotationTypeDeclaration node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(AnnotationTypeMemberDeclaration node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(AnonymousClassDeclaration node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(ArrayAccess node) {
@@ -733,7 +1003,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(FieldDeclaration node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(ForStatement node) {
@@ -805,7 +1075,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(NormalAnnotation node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(OpensDirective node) {
@@ -813,7 +1083,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(PackageDeclaration node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(ParameterizedType node) {
@@ -861,7 +1131,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public void endVisit(SingleMemberAnnotation node) {
-        popNonTerminal();
+        /* do nothing */
     }
 
     public void endVisit(SingleVariableDeclaration node) {
@@ -958,7 +1228,8 @@ public class JDTVisitor extends ASTVisitor {
         popNonTerminal();
     }
 
-    // ------
+    // ------------------------------------------------------------------------------------
+
     private void popMethod() {
         nonTerminals.remove(currentMethod());
         methodBuilders.pop();
@@ -974,7 +1245,8 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     private void popNonTerminal() {
-        nonTerminals.get(currentMethod()).pop();
+        if(!nonTerminals.isEmpty() && !methodBuilders.isEmpty())
+            nonTerminals.get(currentMethod()).pop();
     }
 
     private void addNonTerminal(ASTNode n) {
@@ -1004,6 +1276,10 @@ public class JDTVisitor extends ASTVisitor {
 
     private MethodGraphBuilder currentMethod() {
         return methodBuilders.peek();
+    }
+
+    private boolean inAMethod() {
+        return !methodBuilders.isEmpty() && !nonTerminals.isEmpty();
     }
 
     private NonTerminalBuilder currentNonTerminal() {
