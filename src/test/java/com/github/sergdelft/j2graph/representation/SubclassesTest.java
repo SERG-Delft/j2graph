@@ -1,4 +1,4 @@
-package com.github.sergdelft.j2graph.realclasses;
+package com.github.sergdelft.j2graph.representation;
 
 import com.github.sergdelft.j2graph.TestBase;
 import com.github.sergdelft.j2graph.graph.ClassGraph;
@@ -7,13 +7,12 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * This was failing, mostly because we were not handling
- * sub classes correctly.
- * This is somewhat related to #6
+ * For now, we ignore subclasses.
+ * This is related to #6
  */
-public class AbstractAllocatorTest extends TestBase {
+public class SubclassesTest extends TestBase {
 
-    private ClassGraph graph = run("realclasses/AbstractAllocator.java");
+    private ClassGraph graph = run("representation/SubClasses.java");
 
     @Test
     void ignore_sub_classes() {
