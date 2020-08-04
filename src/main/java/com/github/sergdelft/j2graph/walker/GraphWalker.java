@@ -19,10 +19,10 @@ public class GraphWalker {
             visitor.method(method.getMethodName(), method.getRoot());
 
             // nodes
-            nonTerminals(method, visitor);
             tokens(method, visitor);
             symbols(method, visitor);
             vocabulary(method, visitor);
+            nonTerminals(method, visitor);
 
             // edges
             tokenEdges(method, visitor);
@@ -45,7 +45,7 @@ public class GraphWalker {
     private void returnsTo(MethodGraph method, Walker visitor) {
         // find all return tokens in the current method
         List<Token> returnTokens = method.getTokens().stream()
-                .filter(t -> t.isReturn())
+                .filter(Token::isReturn)
                 .collect(Collectors.toList());
 
         for (Token returnToken : returnTokens) {
@@ -135,18 +135,18 @@ public class GraphWalker {
     }
 
     private void vocabulary(MethodGraph method, Walker visitor) {
-        method.getVocabulary().stream().forEach(s -> visitor.vocabulary(s));
+        method.getVocabulary().forEach(visitor::vocabulary);
     }
 
     private void symbols(MethodGraph method, Walker visitor) {
-        method.getSymbols().stream().forEach(s -> visitor.symbol(s));
+        method.getSymbols().forEach(visitor::symbol);
     }
 
     private void tokens(MethodGraph method, Walker visitor) {
-        method.getTokens().stream().forEach(t -> visitor.token(t));
+        method.getTokens().forEach(visitor::token);
     }
 
     private void nonTerminals(MethodGraph method, Walker visitor) {
-        method.getNonTerminals().stream().forEach(n -> visitor.nonTerminal(n));
+        method.getNonTerminals().forEach(visitor::nonTerminal);
     }
 }

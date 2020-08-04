@@ -106,7 +106,7 @@ public class JDTVisitor extends ASTVisitor {
         // however, it might be that we are not inside a method
         // e.g., field declaration
         // so, we only collect it if we are inside a method
-        if (inAMethod()) {
+        if (inAMethod() && !nonTerminals.get(currentMethod()).isEmpty()) {
             Pair<Symbol, Token> pair = currentNonTerminal().symbol(node.getIdentifier());
 
             // this symbol might appear as part of an assignment.
@@ -136,7 +136,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ArrayAccess node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -145,7 +145,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ArrayCreation node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -154,7 +154,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ArrayInitializer node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -163,7 +163,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ArrayType node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -172,7 +172,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(AssertStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -181,7 +181,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(Assignment node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         this.assignmentMode = true;
@@ -192,7 +192,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(Block node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -201,7 +201,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(BlockComment node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -210,7 +210,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(BooleanLiteral node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         currentNonTerminal().token("" + node.booleanValue());
@@ -219,7 +219,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(BreakStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -227,7 +227,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(CastExpression node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
 
@@ -237,7 +237,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(CatchClause node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -246,7 +246,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(CharacterLiteral node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         // we add the escaped literal value as a token
@@ -256,7 +256,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ClassInstanceCreation node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -265,7 +265,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ConditionalExpression node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -274,7 +274,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ConstructorInvocation node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -283,7 +283,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ContinueStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -292,7 +292,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(CreationReference node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -301,7 +301,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(Dimension node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -310,7 +310,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(DoStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -320,7 +320,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(EmptyStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -329,7 +329,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(EnhancedForStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -339,7 +339,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(EnumConstantDeclaration node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -348,7 +348,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(EnumDeclaration node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -357,7 +357,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ExportsDirective node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -366,7 +366,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ExpressionMethodReference node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -375,7 +375,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ExpressionStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -384,7 +384,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(FieldAccess node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -398,7 +398,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(ForStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -409,7 +409,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(IfStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -424,7 +424,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(InfixExpression node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
 
@@ -446,7 +446,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(InstanceofExpression node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -455,7 +455,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(IntersectionType node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -464,7 +464,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(LabeledStatement node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -473,7 +473,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(LambdaExpression node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -482,7 +482,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(LineComment node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -494,7 +494,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(MemberRef node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -507,7 +507,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(MemberValuePair node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -515,7 +515,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(MethodRef node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -524,7 +524,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(MethodRefParameter node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -533,7 +533,7 @@ public class JDTVisitor extends ASTVisitor {
 
     public boolean visit(NameQualifiedType node) {
 
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -545,7 +545,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(NullLiteral node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         // we add the literal as token
@@ -554,7 +554,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(NumberLiteral node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         // we add the literal as token
@@ -563,7 +563,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(OpensDirective node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -581,7 +581,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(ParenthesizedExpression node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -589,7 +589,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(PostfixExpression node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -597,7 +597,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(PrefixExpression node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -605,7 +605,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(ProvidesDirective node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -613,7 +613,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(PrimitiveType node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -623,7 +623,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(QualifiedName node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -631,7 +631,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(QualifiedType node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -639,7 +639,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(RequiresDirective node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -647,7 +647,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(ReturnStatement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -657,7 +657,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SimpleType node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -670,7 +670,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SingleVariableDeclaration node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -678,7 +678,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(StringLiteral node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         // we add the literal as token
@@ -688,7 +688,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SuperConstructorInvocation node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -696,7 +696,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SuperFieldAccess node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -704,7 +704,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SuperMethodInvocation node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -712,7 +712,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SuperMethodReference node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -720,7 +720,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SwitchCase node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -728,7 +728,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SwitchStatement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -736,7 +736,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(SynchronizedStatement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -744,7 +744,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TagElement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -752,7 +752,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TextElement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -760,7 +760,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(ThisExpression node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -768,7 +768,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(ThrowStatement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -776,7 +776,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TryStatement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -784,7 +784,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TypeLiteral node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         // we add the type as a token
@@ -794,7 +794,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TypeMethodReference node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -802,7 +802,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(TypeParameter node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -810,7 +810,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(UnionType node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -818,7 +818,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(UsesDirective node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -826,7 +826,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(VariableDeclarationExpression node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -834,7 +834,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(VariableDeclarationStatement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -842,7 +842,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(VariableDeclarationFragment node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         // a variable was declared, which means we might need to be
@@ -858,7 +858,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(WhileStatement node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -867,7 +867,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(WildcardType node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
@@ -875,11 +875,13 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public boolean visit(Modifier node) {
-        if(!inAMethod())
+        if(!inAMethod() || nonTerminals.get(currentMethod()).isEmpty())
             return false;
 
         addNonTerminal(node);
-        currentNonTerminal().token(node.toString());
+        if (!nonTerminals.get(currentMethod()).isEmpty()) {
+            currentNonTerminal().token(node.toString());
+        }
         return super.visit(node);
     }
 
@@ -1484,18 +1486,23 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     private void popNonTerminal() {
-        if(!nonTerminals.isEmpty() && !methodBuilders.isEmpty())
+        if(!nonTerminals.isEmpty() && !methodBuilders.isEmpty() && !nonTerminals.get(currentMethod()).isEmpty())
             nonTerminals.get(currentMethod()).pop();
     }
 
     private void addNonTerminal(ASTNode n) {
-        NonTerminalBuilder nonTerminal = currentNonTerminal().nonTerminal(type(n));
-        nonTerminals.get(currentMethod()).push(nonTerminal);
+        if (!methodBuilders.isEmpty() && !nonTerminals.get(currentMethod()).isEmpty()) {
+            NonTerminalBuilder nonTerminal = currentNonTerminal().nonTerminal(type(n));
+            nonTerminals.get(currentMethod()).push(nonTerminal);
 
-        checkAssignmentMode();
+            checkAssignmentMode();
+        }
     }
 
     private void addMethodInvocation(ASTNode n, String invokedMethod) {
+        if (nonTerminals.get(currentMethod()).isEmpty()) {
+            return;
+        }
         NonTerminalBuilder nonTerminal = currentNonTerminal().methodInvocation(type(n), invokedMethod);
         nonTerminals.get(currentMethod()).push(nonTerminal);
 
@@ -1526,7 +1533,7 @@ public class JDTVisitor extends ASTVisitor {
     }
 
     public ClassGraph buildClassGraph() {
-        return classBuilder.build();
+        return classBuilder != null ? classBuilder.build() : null;
     }
 
 }

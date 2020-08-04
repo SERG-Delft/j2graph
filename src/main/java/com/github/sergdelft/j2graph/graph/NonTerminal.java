@@ -31,6 +31,10 @@ public class NonTerminal {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public List<NonTerminal> getChildren() {
         return children;
     }

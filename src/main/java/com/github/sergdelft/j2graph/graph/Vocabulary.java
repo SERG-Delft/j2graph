@@ -4,7 +4,7 @@ public class Vocabulary {
     private static int COUNTER = 0;
 
     private final String word;
-    private final int id;
+    private int id;
 
     public Vocabulary(String word) {
         this.id = ++COUNTER;
@@ -17,5 +17,9 @@ public class Vocabulary {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

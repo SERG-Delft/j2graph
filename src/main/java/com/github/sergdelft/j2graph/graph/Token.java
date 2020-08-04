@@ -6,7 +6,7 @@ public class Token {
     private static int COUNTER = 0;
 
     private final String tokenName;
-    private final int id;
+    private int id;
 
     private Symbol symbol;
     private NonTerminal assignedFrom;
@@ -41,6 +41,10 @@ public class Token {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Optional<Symbol> getSymbol() {
