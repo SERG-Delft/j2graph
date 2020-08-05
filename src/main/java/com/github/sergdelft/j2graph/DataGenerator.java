@@ -44,8 +44,9 @@ public class DataGenerator {
 
     private void iterateFiles(String path, Split split) throws IOException {
         System.out.println("Starting to preprocess files for " + split.name().toLowerCase());
-        GraphWalker out = new GraphWalker();
-        PrintWriter writer = new PrintWriter(split.name().toLowerCase() + ".txt", StandardCharsets.UTF_8);
+        GraphWalker graphWalker = new GraphWalker();
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(split.name().toLowerCase() + ".txt"));
+        PrintWriter writer = new PrintWriter(out, true, StandardCharsets.UTF_8);
         HashSet<Token> tokens = new HashSet<>();
         HashSet<Symbol> symbols = new HashSet<>();
         HashSet<Vocabulary> vocabularies = new HashSet<>();
@@ -56,7 +57,7 @@ public class DataGenerator {
 
         if (!directoryListing.isEmpty()) {
             for (Path filePath : directoryListing) {
-                processFile(split, out, writer, tokens, symbols, vocabularies, filePath);
+                processFile(split, graphWalker, writer, tokens, symbols, vocabularies, filePath);
             }
             if (split.equals(Split.TRAIN)) {
                 writeTokensToFile(split, writer, tokens, symbols, vocabularies);
@@ -78,23 +79,28 @@ public class DataGenerator {
             for (Pair<JsonObject, JsonObject> pair : jsonVisitor.getCorrectAndBuggyPairs()) {
                 writer.println(pair.getLeft());
                 writer.println(pair.getRight());
+                writer.flush();
             }
         }
     }
 
     private void writeTokensToFile(Split split, PrintWriter writer, HashSet<Token> tokens, HashSet<Symbol> symbols, HashSet<Vocabulary> vocabularies) throws IOException {
-        PrintWriter vocabWriter = new PrintWriter(split.name().toLowerCase() + "_vocab.txt", StandardCharsets.UTF_8);
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(split.name().toLowerCase() + "_vocab.txt"));
+        PrintWriter vocabWriter = new PrintWriter(out, true, StandardCharsets.UTF_8);
         vocabWriter.println("");
         for (Token token : tokens) {
             vocabWriter.print(token.getTokenName() + " ");
+            writer.flush();
         }
         vocabWriter.println("");
         for (Symbol symbol : symbols) {
             vocabWriter.print(symbol.getSymbol() + " ");
+            writer.flush();
         }
         vocabWriter.println("");
         for (Vocabulary vocabulary: vocabularies) {
             vocabWriter.print(vocabulary.getWord() + " ");
+            writer.flush();
         }
         writer.close();
     }
