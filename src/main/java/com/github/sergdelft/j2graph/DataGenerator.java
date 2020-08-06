@@ -53,19 +53,25 @@ public class DataGenerator {
     private void processFile(Split split, PrintWriter processedDataWriter, PrintWriter vocabWriter, Path filePath) {
         GraphWalker graphWalker = new GraphWalker();
         String sourceCode = loadSourceCode(filePath.toString());
-        ClassGraph graph = new JDT().parse(sourceCode);
-        if (graph != null) {
-            JsonVisitor jsonVisitor = new JsonVisitor();
-            graphWalker.accept(graph, jsonVisitor);
-            if (split.equals(Split.TRAIN) && !jsonVisitor.getCorrectAndBuggyPairs().isEmpty()) {
-                saveTokensToFile(vocabWriter, graph);
+        try {
+            ClassGraph graph = new JDT().parse(sourceCode);
+            if (graph != null) {
+                JsonVisitor jsonVisitor = new JsonVisitor();
+                graphWalker.accept(graph, jsonVisitor);
+                if (split.equals(Split.TRAIN) && !jsonVisitor.getCorrectAndBuggyPairs().isEmpty()) {
+                    saveTokensToFile(vocabWriter, graph);
+                }
+                for (Pair<JsonObject, JsonObject> pair : jsonVisitor.getCorrectAndBuggyPairs()) {
+                    processedDataWriter.println(pair.getLeft());
+                    processedDataWriter.println(pair.getRight());
+                    processedDataWriter.flush();
+                }
             }
-            for (Pair<JsonObject, JsonObject> pair : jsonVisitor.getCorrectAndBuggyPairs()) {
-                processedDataWriter.println(pair.getLeft());
-                processedDataWriter.println(pair.getRight());
-                processedDataWriter.flush();
-            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Couldn't parse code");
         }
+
+
     }
 
     protected String loadSourceCode(String fixture) {
