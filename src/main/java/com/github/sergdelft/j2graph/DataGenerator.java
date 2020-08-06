@@ -12,9 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DataGenerator {
 
@@ -22,14 +19,6 @@ public class DataGenerator {
         TRAIN,
         DEV,
         EVAL
-    }
-
-    protected String loadFixture(String fixture) {
-        try {
-            return new String (Files.readAllBytes(Paths.get(fixture)));
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void run() {
@@ -44,72 +33,60 @@ public class DataGenerator {
 
     private void iterateFiles(String path, Split split) throws IOException {
         System.out.println("Starting to preprocess files for " + split.name().toLowerCase());
-        GraphWalker graphWalker = new GraphWalker();
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(split.name().toLowerCase() + ".txt"));
-        PrintWriter writer = new PrintWriter(out, true, StandardCharsets.UTF_8);
-        HashSet<Token> tokens = new HashSet<>();
-        HashSet<Symbol> symbols = new HashSet<>();
-        HashSet<Vocabulary> vocabularies = new HashSet<>();
 
-        List<Path> directoryListing = Files.walk(Paths.get(path))
+        BufferedOutputStream processedDataStream = new BufferedOutputStream(new FileOutputStream(split.name().toLowerCase() + ".txt"));
+        PrintWriter processedDataWriter = new PrintWriter(processedDataStream, true, StandardCharsets.UTF_8);
+
+        BufferedOutputStream vocabStream = new BufferedOutputStream(new FileOutputStream(split.name().toLowerCase() + "_vocab.txt"));
+        PrintWriter vocabWriter = new PrintWriter(vocabStream, true, StandardCharsets.UTF_8);
+
+        Files.walk(Paths.get(path))
                 .filter(Files::isRegularFile)
-                .collect(Collectors.toList());
+                .forEach(filePath -> processFile(split, processedDataWriter, vocabWriter, filePath));
 
-        if (!directoryListing.isEmpty()) {
-            for (Path filePath : directoryListing) {
-                processFile(split, graphWalker, writer, tokens, symbols, vocabularies, filePath);
-            }
-            if (split.equals(Split.TRAIN)) {
-                writeTokensToFile(split, writer, tokens, symbols, vocabularies);
-            }
-        } else {
-            System.out.println(path + " is not a directory!");
-        }
+        processedDataWriter.close();
+        processedDataStream.close();
+        vocabWriter.close();
+        vocabStream.close();
     }
 
-    private void processFile(Split split, GraphWalker out, PrintWriter writer, HashSet<Token> tokens, HashSet<Symbol> symbols, HashSet<Vocabulary> vocabularies, Path filePath) {
-        String sourceCode = loadFixture(filePath.toString());
+    private void processFile(Split split, PrintWriter processedDataWriter, PrintWriter vocabWriter, Path filePath) {
+        GraphWalker graphWalker = new GraphWalker();
+        String sourceCode = loadSourceCode(filePath.toString());
         ClassGraph graph = new JDT().parse(sourceCode);
         if (graph != null) {
-            if (split.equals(Split.TRAIN)) {
-                saveTokens(tokens, symbols, vocabularies, graph);
-            }
             JsonVisitor jsonVisitor = new JsonVisitor();
-            out.accept(graph, jsonVisitor);
+            graphWalker.accept(graph, jsonVisitor);
+            if (split.equals(Split.TRAIN) && !jsonVisitor.getCorrectAndBuggyPairs().isEmpty()) {
+                saveTokensToFile(vocabWriter, graph);
+            }
             for (Pair<JsonObject, JsonObject> pair : jsonVisitor.getCorrectAndBuggyPairs()) {
-                writer.println(pair.getLeft());
-                writer.println(pair.getRight());
-                writer.flush();
+                processedDataWriter.println(pair.getLeft());
+                processedDataWriter.println(pair.getRight());
+                processedDataWriter.flush();
             }
         }
     }
 
-    private void writeTokensToFile(Split split, PrintWriter writer, HashSet<Token> tokens, HashSet<Symbol> symbols, HashSet<Vocabulary> vocabularies) throws IOException {
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(split.name().toLowerCase() + "_vocab.txt"));
-        PrintWriter vocabWriter = new PrintWriter(out, true, StandardCharsets.UTF_8);
-        vocabWriter.println("");
-        for (Token token : tokens) {
-            vocabWriter.print(token.getTokenName() + " ");
-            writer.flush();
+    protected String loadSourceCode(String fixture) {
+        try {
+            return new String (Files.readAllBytes(Paths.get(fixture)));
+        } catch(Exception e) {
+            throw new RuntimeException(e);
         }
-        vocabWriter.println("");
-        for (Symbol symbol : symbols) {
-            vocabWriter.print(symbol.getSymbol() + " ");
-            writer.flush();
-        }
-        vocabWriter.println("");
-        for (Vocabulary vocabulary: vocabularies) {
-            vocabWriter.print(vocabulary.getWord() + " ");
-            writer.flush();
-        }
-        writer.close();
     }
 
-    private void saveTokens(HashSet<Token> tokens, HashSet<Symbol> symbols, HashSet<Vocabulary> vocabularies, ClassGraph graph) {
+    private void saveTokensToFile(PrintWriter vocabWriter, ClassGraph graph) {
         for (MethodGraph methodGraph : graph.getMethods()) {
-            tokens.addAll(methodGraph.getTokens());
-            symbols.addAll(methodGraph.getSymbols());
-            vocabularies.addAll(methodGraph.getVocabulary());
+            vocabWriter.println("");
+            methodGraph.getTokens().forEach(t -> vocabWriter.print(t.getTokenName() + " "));
+            vocabWriter.println("");
+            methodGraph.getSymbols().forEach(s -> vocabWriter.print(s.getSymbol() + " "));
+            vocabWriter.println("");
+            methodGraph.getVocabulary().forEach(v -> vocabWriter.print(v.getWord() + " "));
+            vocabWriter.println("");
+            methodGraph.getNonTerminals().forEach(nt -> vocabWriter.print(nt.getName() + " "));
+            vocabWriter.flush();
         }
     }
 }
