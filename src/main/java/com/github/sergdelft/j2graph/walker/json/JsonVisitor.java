@@ -8,46 +8,39 @@ import com.github.sergdelft.j2graph.walker.Walker;
 import com.google.gson.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
+/**
+ * Visitor to help generate data for ICLR20-Great data format: https://github.com/VHellendoorn/ICLR20-Great
+ * <p>
+ * The Visitor also mutates binary expressions (<,<=,>,>=)
+ */
 public class JsonVisitor implements Walker {
 
-    enum Edge {
-        NEXT_TOKEN(0),
-        CHILD(1),
-        OCCURENCE_OF(2),
-        SUBTOKEN_OF(3),
-        RETURNS_TO(4),
-        NEXT_LEXICAL_USE(5),
-        ASSIGNED_FROM(6);
-
-        private final int value;
-        Edge(int v) { value = v; }
-        public int getValue() { return value; }
-    }
-
+    private final ArrayList<ImmutablePair<JsonObject, JsonObject>> jsonPairs = new ArrayList<>();
     private int counter = 0;
     private JsonObject correctJson;
     private JsonObject buggyJson;
     private JsonArray edges = new JsonArray();
     private ArrayList<String> tokens = new ArrayList<>();
     private ArrayList<Integer> tokenIds = new ArrayList<>();
-    private final ArrayList<ImmutablePair<JsonObject, JsonObject>> jsonPairs = new ArrayList<>();
 
     private void addDummyData() {
-        correctJson.add("repair_candidates", new Gson().toJsonTree(new int[] {0}));
+        correctJson.add("repair_candidates", new Gson().toJsonTree(new int[]{0}));
     }
 
     @Override
-    public void className(String className) {}
+    public void className(String className) {
+    }
 
     @Override
     public void method(String methodName, NonTerminal root) {
         correctJson = new JsonObject();
         buggyJson = null;
         addDummyData();
-        markForBugginess(correctJson,false, 0);
+        markForBugginess(correctJson, false, 0);
 
         root.setId(counter);
         tokenIds.add(root.getId());
@@ -101,64 +94,63 @@ public class JsonVisitor implements Walker {
     @Override
     public void nextToken(Token t1, Token t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.NEXT_TOKEN);
+            addEdge(t1.getId(), t2.getId(), EdgeType.NEXT_TOKEN);
         }
     }
 
     @Override
     public void child(NonTerminal t1, Token t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.CHILD);
+            addEdge(t1.getId(), t2.getId(), EdgeType.CHILD);
         }
     }
 
     @Override
     public void child(NonTerminal t1, NonTerminal t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.CHILD);
+            addEdge(t1.getId(), t2.getId(), EdgeType.CHILD);
         }
     }
 
     @Override
     public void occurrenceOf(Token t1, Symbol t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.OCCURENCE_OF);
+            addEdge(t1.getId(), t2.getId(), EdgeType.OCCURENCE_OF);
         }
     }
 
     @Override
     public void subtokenOf(Vocabulary t1, Token t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.SUBTOKEN_OF);
+            addEdge(t1.getId(), t2.getId(), EdgeType.SUBTOKEN_OF);
         }
     }
 
     @Override
     public void returnsTo(NonTerminal t1, Token t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.RETURNS_TO);
+            addEdge(t1.getId(), t2.getId(), EdgeType.RETURNS_TO);
         }
     }
 
     @Override
     public void nextLexicalUse(Token t1, Token t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.NEXT_LEXICAL_USE);
+            addEdge(t1.getId(), t2.getId(), EdgeType.NEXT_LEXICAL_USE);
         }
     }
 
     @Override
     public void assignedFrom(Token t1, NonTerminal t2) {
         if (tokenIds.contains(t1.getId()) && tokenIds.contains(t2.getId())) {
-            addEdge(t1.getId(), t2.getId(), Edge.ASSIGNED_FROM);
+            addEdge(t1.getId(), t2.getId(), EdgeType.ASSIGNED_FROM);
         }
     }
 
     @Override
     public void endMethod(String methodName, NonTerminal root) {
-
-        changeJson(correctJson,"source_tokens", new Gson().toJsonTree(tokens));
-        changeJson(correctJson,"edges", new Gson().toJsonTree(edges));
+        changeJson(correctJson, "source_tokens", new Gson().toJsonTree(tokens));
+        changeJson(correctJson, "edges", new Gson().toJsonTree(edges));
         buggyJson = findBinaryExpressionAndMutateJson(correctJson.deepCopy());
         if (buggyJson != null && edges.size() != 0) {
             ImmutablePair<JsonObject, JsonObject> pair = new ImmutablePair<>(correctJson, buggyJson);
@@ -173,7 +165,8 @@ public class JsonVisitor implements Walker {
     }
 
     @Override
-    public void end() { }
+    public void end() {
+    }
 
     private JsonObject findBinaryExpressionAndMutateJson(JsonObject objToMutate) {
         JsonElement tokens = objToMutate.get("source_tokens");
@@ -231,12 +224,32 @@ public class JsonVisitor implements Walker {
         objToMutate.addProperty(property, value);
     }
 
-    private void addEdge(int idFrom, int idTo, Edge edgeEnum) {
+    private void addEdge(int idFrom, int idTo, EdgeType edgeType) {
         JsonArray edge = new JsonArray();
         edge.add(idFrom);
         edge.add(idTo);
-        edge.add(edgeEnum.getValue());
-        edge.add(edgeEnum.toString());
+        edge.add(edgeType.getValue());
+        edge.add(edgeType.toString());
         edges.add(edge);
+    }
+
+    enum EdgeType {
+        NEXT_TOKEN(0),
+        CHILD(1),
+        OCCURENCE_OF(2),
+        SUBTOKEN_OF(3),
+        RETURNS_TO(4),
+        NEXT_LEXICAL_USE(5),
+        ASSIGNED_FROM(6);
+
+        private final int value;
+
+        EdgeType(int v) {
+            value = v;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 }

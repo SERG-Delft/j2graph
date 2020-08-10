@@ -13,6 +13,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+
+/**
+ * Generator for ICLR20-Great data format: https://github.com/VHellendoorn/ICLR20-Great
+ * <p>
+ * Also generates token vocabulary for training data (no BPE version).
+ */
 public class DataGenerator {
 
     enum Split {
@@ -23,9 +29,9 @@ public class DataGenerator {
 
     public void run() {
         try {
-            iterateFiles("C:\\Users\\Kasutaja\\DATASET\\duplicated\\java-small\\training", Split.TRAIN);
-            iterateFiles("C:\\Users\\Kasutaja\\DATASET\\duplicated\\java-small\\validation", Split.DEV);
-            iterateFiles("C:\\Users\\Kasutaja\\DATASET\\duplicated\\java-small\\test", Split.EVAL);
+            iterateFiles("path/to/folder/containing/java/files/for/train", Split.TRAIN);
+            iterateFiles("path/to/folder/containing/java/files/for/train/validation", Split.DEV);
+            iterateFiles("path/to/folder/containing/java/files/for/test", Split.EVAL);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,7 +74,7 @@ public class DataGenerator {
                 }
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("Couldn't parse code");
+            System.out.println("Couldn't parse code. Ignoring and continuing...");
         }
 
 
