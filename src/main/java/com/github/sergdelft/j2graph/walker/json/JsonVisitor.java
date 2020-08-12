@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Visitor to help generate data for ICLR20-Great data format: https://github.com/VHellendoorn/ICLR20-Great
@@ -19,6 +20,7 @@ import java.util.Random;
  */
 public class JsonVisitor implements Walker {
 
+    final int BUGGY_METHODS_PER_HUNDRED = 10;
     private final ArrayList<ImmutablePair<JsonObject, JsonObject>> jsonPairs = new ArrayList<>();
     private int counter = 0;
     private JsonObject correctJson;
@@ -178,7 +180,7 @@ public class JsonVisitor implements Walker {
             }
             tokenIndex++;
         }
-        if (!mutatableTokens.isEmpty()) {
+        if (!mutatableTokens.isEmpty() && ThreadLocalRandom.current().nextInt(0, 100 + 1) < BUGGY_METHODS_PER_HUNDRED) {
             Random randomizer = new Random();
             Integer randomIndex = mutatableTokens.get(randomizer.nextInt(mutatableTokens.size()));
             JsonArray allTokens = tokens.getAsJsonArray();
