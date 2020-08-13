@@ -32,6 +32,7 @@ public class DataGenerator {
             iterateFiles("path/to/folder/containing/java/files/for/train", Split.TRAIN);
             iterateFiles("path/to/folder/containing/java/files/for/train/validation", Split.DEV);
             iterateFiles("path/to/folder/containing/java/files/for/test", Split.EVAL);
+            System.out.println("Finished");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,8 +59,8 @@ public class DataGenerator {
 
     private void processFile(Split split, PrintWriter processedDataWriter, PrintWriter vocabWriter, Path filePath) {
         GraphWalker graphWalker = new GraphWalker();
-        String sourceCode = loadSourceCode(filePath.toString());
         try {
+            String sourceCode = loadSourceCode(filePath.toString());
             ClassGraph graph = new JDT().parse(sourceCode);
             if (graph != null) {
                 JsonVisitor jsonVisitor = new JsonVisitor();
