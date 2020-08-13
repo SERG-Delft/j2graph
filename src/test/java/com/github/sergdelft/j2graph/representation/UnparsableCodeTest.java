@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Tests that exercise the classes with imports.
- * This was a bug (issue #3)
+ * Tests that exercise the classes with unparsable code.
  */
 public class UnparsableCodeTest extends TestBase {
 
