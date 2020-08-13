@@ -1,9 +1,9 @@
-package com.github.sergdelft.j2graph;
+package com.github.sergdelft.j2graph.iclr20great;
 
 import com.github.sergdelft.j2graph.ast.JDT;
 import com.github.sergdelft.j2graph.graph.*;
 import com.github.sergdelft.j2graph.walker.GraphWalker;
-import com.github.sergdelft.j2graph.walker.json.JsonVisitor;
+import com.github.sergdelft.j2graph.walker.iclr20great.ICLR20GreatVisitor;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -19,7 +19,7 @@ import java.nio.file.Paths;
  * <p>
  * Also generates token vocabulary for training data (no BPE version).
  */
-public class DataGenerator {
+public class ICLR20GreatDataGenerator {
 
     enum Split {
         TRAIN,
@@ -63,12 +63,12 @@ public class DataGenerator {
             String sourceCode = loadSourceCode(filePath.toString());
             ClassGraph graph = new JDT().parse(sourceCode);
             if (graph != null) {
-                JsonVisitor jsonVisitor = new JsonVisitor();
-                graphWalker.accept(graph, jsonVisitor);
-                if (split.equals(Split.TRAIN) && !jsonVisitor.getCorrectAndBuggyPairs().isEmpty()) {
+                ICLR20GreatVisitor ICLR20GreatVisitor = new ICLR20GreatVisitor();
+                graphWalker.accept(graph, ICLR20GreatVisitor);
+                if (split.equals(Split.TRAIN) && !ICLR20GreatVisitor.getCorrectAndBuggyPairs().isEmpty()) {
                     saveTokensToFile(vocabWriter, graph);
                 }
-                for (Pair<JsonObject, JsonObject> pair : jsonVisitor.getCorrectAndBuggyPairs()) {
+                for (Pair<JsonObject, JsonObject> pair : ICLR20GreatVisitor.getCorrectAndBuggyPairs()) {
                     processedDataWriter.println(pair.getLeft());
                     processedDataWriter.println(pair.getRight());
                     processedDataWriter.flush();

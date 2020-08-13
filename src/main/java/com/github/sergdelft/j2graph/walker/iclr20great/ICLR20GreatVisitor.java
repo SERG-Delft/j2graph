@@ -1,4 +1,4 @@
-package com.github.sergdelft.j2graph.walker.json;
+package com.github.sergdelft.j2graph.walker.iclr20great;
 
 import com.github.sergdelft.j2graph.graph.NonTerminal;
 import com.github.sergdelft.j2graph.graph.Symbol;
@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>
  * The Visitor also mutates binary expressions (<,<=,>,>=)
  */
-public class JsonVisitor implements Walker {
+public class ICLR20GreatVisitor implements Walker {
 
     final int BUGGY_METHODS_PER_HUNDRED = 10;
     private final ArrayList<ImmutablePair<JsonObject, JsonObject>> jsonPairs = new ArrayList<>();
