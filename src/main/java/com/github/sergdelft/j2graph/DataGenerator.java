@@ -74,19 +74,15 @@ public class DataGenerator {
                     processedDataWriter.flush();
                 }
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IOException e) {
             System.out.println("Couldn't parse code. Ignoring and continuing...");
         }
 
 
     }
 
-    protected String loadSourceCode(String fixture) {
-        try {
-            return new String (Files.readAllBytes(Paths.get(fixture)));
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
+    protected String loadSourceCode(String fixture) throws IOException {
+        return new String (Files.readAllBytes(Paths.get(fixture)));
     }
 
     private void saveTokensToFile(PrintWriter vocabWriter, ClassGraph graph) {
