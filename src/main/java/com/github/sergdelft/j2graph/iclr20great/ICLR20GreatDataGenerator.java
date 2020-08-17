@@ -1,17 +1,22 @@
 package com.github.sergdelft.j2graph.iclr20great;
 
 import com.github.sergdelft.j2graph.ast.JDT;
-import com.github.sergdelft.j2graph.graph.*;
+import com.github.sergdelft.j2graph.graph.ClassGraph;
+import com.github.sergdelft.j2graph.graph.MethodGraph;
 import com.github.sergdelft.j2graph.walker.GraphWalker;
 import com.github.sergdelft.j2graph.walker.iclr20great.ICLR20GreatVisitor;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -21,11 +26,7 @@ import java.nio.file.Paths;
  */
 public class ICLR20GreatDataGenerator {
 
-    enum Split {
-        TRAIN,
-        DEV,
-        EVAL
-    }
+    final int BUGGY_METHODS_PER_HUNDRED = 10;
 
     public void run() {
         try {
@@ -69,9 +70,8 @@ public class ICLR20GreatDataGenerator {
                     saveTokensToFile(vocabWriter, graph);
                 }
                 for (Pair<JsonObject, JsonObject> pair : ICLR20GreatVisitor.getCorrectAndBuggyPairs()) {
-                    processedDataWriter.println(pair.getLeft());
-                    processedDataWriter.println(pair.getRight());
-                    processedDataWriter.flush();
+                    boolean balanced = false;
+                    writeData(processedDataWriter, pair, balanced);
                 }
             }
         } catch (IllegalArgumentException | IOException e) {
@@ -79,6 +79,14 @@ public class ICLR20GreatDataGenerator {
         }
 
 
+    }
+
+    private void writeData(PrintWriter processedDataWriter, Pair<JsonObject, JsonObject> pair, boolean balanced) {
+        processedDataWriter.println(pair.getLeft());
+        if (balanced || ThreadLocalRandom.current().nextInt(0, 100 + 1) < BUGGY_METHODS_PER_HUNDRED) {
+            processedDataWriter.println(pair.getRight());
+        }
+        processedDataWriter.flush();
     }
 
     protected String loadSourceCode(String fixture) throws IOException {
@@ -97,5 +105,11 @@ public class ICLR20GreatDataGenerator {
             methodGraph.getNonTerminals().forEach(nt -> vocabWriter.print(nt.getName() + " "));
             vocabWriter.flush();
         }
+    }
+
+    enum Split {
+        TRAIN,
+        DEV,
+        EVAL
     }
 }

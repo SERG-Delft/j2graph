@@ -20,7 +20,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class ICLR20GreatVisitor implements Walker {
 
-    final int BUGGY_METHODS_PER_HUNDRED = 10;
     private final ArrayList<ImmutablePair<JsonObject, JsonObject>> jsonPairs = new ArrayList<>();
     private int counter = 0;
     private JsonObject correctJson;
@@ -180,7 +179,7 @@ public class ICLR20GreatVisitor implements Walker {
             }
             tokenIndex++;
         }
-        if (!mutatableTokens.isEmpty() && ThreadLocalRandom.current().nextInt(0, 100 + 1) < BUGGY_METHODS_PER_HUNDRED) {
+        if (!mutatableTokens.isEmpty()) {
             Random randomizer = new Random();
             Integer randomIndex = mutatableTokens.get(randomizer.nextInt(mutatableTokens.size()));
             JsonArray allTokens = tokens.getAsJsonArray();
