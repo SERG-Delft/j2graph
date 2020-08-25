@@ -3,7 +3,7 @@ package com.github.sergdelft.j2graph.graph;
 public class Symbol {
     private static int COUNTER = 0;
 
-    private final int id;
+    private int id;
     private final String symbol;
 
     public Symbol(String symbol) {
@@ -13,6 +13,10 @@ public class Symbol {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSymbol() {
